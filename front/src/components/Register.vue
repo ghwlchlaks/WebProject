@@ -4,7 +4,6 @@
     <br>
     <input type="password" name="password" v-model="password" placeholder="password"/>
     <br>
-    <button @click="login">Login</button>
     <button @click="register">register</button>
   </div>
 </template>
@@ -25,14 +24,11 @@ export default {
   // },
   methods: {
     async register () {
-      const response = await AuthenticationService.register({
+      const response = await AuthenticationService.signup({
         email: this.email,
         password: this.password
       })
       console.log(response.data)
-    },
-    login () {
-      this.$router.push('/test')
     }
   }
   // mounted () {
