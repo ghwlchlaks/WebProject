@@ -15,7 +15,7 @@ var index = require('../routes/index')
 var users = require('../routes/users')
 
 var app = express()
-mongoose.connect('mongodb://localhost/test3')
+mongoose.connect('mongodb://localhost/test5')
 mongoose.Promise = global.Promise
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error: '))

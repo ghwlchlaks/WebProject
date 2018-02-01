@@ -1,13 +1,12 @@
-var LocalStrategy = require('passport-local').Strategy
-var User = require('../models/user')
+const LocalStrategy = require('passport-local').Strategy
+const User = require('../models/user')
+
 module.exports = function (passport) {
   passport.serializeUser(function (user, done) {
-    console.log('serial ' + user)
-    done(null, user)
+    done(null, user._id)
   })
-  passport.deserializeUser(function (user, done) {
-    User.findById(user._id, function (err, user) {
-      console.log('deserial ' + user)
+  passport.deserializeUser(function (id, done) {
+    User.findById(id, function (err, user) {
       done(err, user)
     })
   })
@@ -18,34 +17,39 @@ module.exports = function (passport) {
     passReqToCallback: true
   },
   function (req, email, password, done) {
-    User.findOne({
-      'email': email
-    }, function (err, user) {
-      if (err) return done(err)
-      if (user) {
-        return done(null, false, req.flash('signupMessage', '이메일이 존재합니다.'))
+    User.findOne({ 'email': email }, function (err, user) {
+      if (err) {
+        // res.status(400).send({error: 'passport module error!'})
+        done(err)
+      }
+      if (!user) {
+        console.log('exist')
+        // res.status(400).send({error: 'This E-mail account is already in use '})
+        return done(null, false, {error: 'Thie E-mail account is already in use'})
       } else {
-        var newUser = new User()
-        // newUser.name = req.body.name
+        const newUser = new User()
         newUser.email = email
         newUser.password = newUser.generateHash(password)
+        // newUser.major_language = req.body.major_language
         newUser.save(function (err) {
-          if (err) { throw err }
-          return done(null, newUser)
+          if (err) {
+            // res.status(400).send({error: 'Between passport-server and mongodb occur problem!'})
+            return done(null, false, {error: 'Between passport-server and mongodb occur problem!'})
+          } else {
+            return done(null, user)
+          }
         })
       }
     })
   }))
 
-  passport.use('signin', new LocalStrategy({
+  passport.use('login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
   },
   function (req, email, password, done) {
-    User.findOne({
-      'email': email
-    }, function (err, user) {
+    User.findOne({ 'email': email }, function (err, user) {
       if (err) { return done(err) }
       if (!user) { return done(null, false, req.flash('loginMessage', '사용자를 찾을 수 없습니다.')) }
       if (!user.validPassword(password)) { return done(null, false, req.flash('loginMessage', '비밀번호가 다릅니다.')) }

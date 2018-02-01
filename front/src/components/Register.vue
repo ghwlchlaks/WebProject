@@ -4,7 +4,9 @@
     <br>
     <input type="password" name="password" v-model="password" placeholder="password"/>
     <br>
-    <button @click="register">register</button>
+    <button @click="signup">register</button>
+    <br />
+    <input type="text" v-model="error" />
   </div>
 </template>
 
@@ -14,7 +16,8 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: ''
     }
   },
   // watch: {
@@ -23,7 +26,7 @@ export default {
   //   }
   // },
   methods: {
-    async register () {
+    async signup () {
       const response = await AuthenticationService.signup({
         email: this.email,
         password: this.password
