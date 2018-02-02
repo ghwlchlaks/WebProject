@@ -1,22 +1,20 @@
 const Joi = require('joi')
 
 module.exports = {
-  register (req, res, next) {
+  signup (req, res, next) {
     const schema = {
-      email: Joi.string().email(),
+      username: Joi.string().alphanum().min(3).max(30).required(),
       password: Joi.string().regex(
         new RegExp('^[a-xA-Z0-9]{8,32}$')
       )
     }
-    const {error, value} = Joi.validate(req.body, schema)
-    console.log('AuthenticationControllerPolicy error value', error)
-    console.log('AuthenticationControllerPolicy value value', value)
-    console.log(Boolean(error))
+    // const {error, value} = Joi.validate(req.body, schema)
+    const {error} = Joi.validate(req.body, schema)
     if (error) {
       switch (error.detalis[0].context.key) {
-        case 'email':
+        case 'username':
           res.status(400).send({
-            error: 'you must provide a valid email address'
+            error: 'you must provide a valid username'
           })
           break
         case 'password':

@@ -1,17 +1,53 @@
 var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs')
-var userSchema = mongoose.Schema({
-  name: String,
-  email: String,
-  password: String
+var Schema = mongoose.Schema
+
+var userSchema = new Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  // email:
+  // {
+  //   type: String,
+  //   unique: true,
+  //   required: true
+  // },
+  password: {
+    type: String,
+    unique: true,
+    required: true
+  }
 })
-//  password를 암호화
-userSchema.methods.generateHash = function (password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+
+userSchema.pre('save', function (next) {
+  var user = this
+  if (this.isModified('password') || this.isNew) {
+    bcrypt.genSalt(10, function (err, salt) {
+      if (err) {
+        return next(err)
+      }
+      bcrypt.hash(user.password, salt, null, function (err, hash) {
+        if (err) {
+          return next(err)
+        }
+        user.password = hash
+        next()
+      })
+    })
+  } else {
+    return next()
+  }
+})
+
+userSchema.methods.comparePassword = function (passw, cb) {
+  bcrypt.compare(passw, this.password, function (err, isMatch) {
+    if (err) {
+      return cb(err)
+    }
+    cb(null, isMatch)
+  })
 }
-//  password의 유효성 검증
-userSchema.methods.validPassword = function (password) {
-  console.log(bcrypt.compareSync(password, this.password))
-  return bcrypt.compareSync(password, this.password)
-}
+
 module.exports = mongoose.model('User', userSchema)

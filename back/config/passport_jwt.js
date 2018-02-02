@@ -1,6 +1,8 @@
-const JwtStrategy = require('passport-jwt').Strategy
-const ExtractJwt = require('passport-jwt').ExtractJwt
+var JwtStrategy = require('passport-jwt').Strategy
+var ExtractJwt = require('passport-jwt').ExtractJwt
+
 const User = require('../models/user')
+// const config = require('./databse')
 
 module.exports = function (passport) {
   var opts = {}
@@ -9,8 +11,9 @@ module.exports = function (passport) {
   opts.issuer = 'accounts.examplesoft.com'
   opts.audience = 'yoursite.net'
 
-  passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
-    User.findOne({email: jwt_payload.sub}, function (err, user) {
+  passport.use(new JwtStrategy(opts, function (payload, done) {
+    console.log('jwt pay load', payload)
+    User.findOne({id: payload.id}, function (err, user) {
       if (err) {
         return done(err, false)
       }
