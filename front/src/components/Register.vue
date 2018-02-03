@@ -1,23 +1,39 @@
 <template>
-  <div>
-    <input type="email" name="email" v-model="email" placeholder="email"/>
-    <br>
-    <input type="password" name="password" v-model="password" placeholder="password"/>
-    <br>
-    <button @click="signup">register</button>
-    <br />
-    <input type="text" v-model="error" />
-  </div>
+  <v-layout column>
+    <v-flex xs6 offset-xs3>
+      <div class="white elevation-2">
+        <v-toolbar flat dense color="grey darken-1" dark>
+          <v-toolbar-title>Register</v-toolbar-title>
+        </v-toolbar>
+        <div class='pl-4 pr-4 pt-2 pb-2'>
+          <v-text-field type="username" name="username" v-model="username" placeholder="username" />
+          <br />
+          <v-text-field type="password" name="password" v-model="password" placeholder="password" />
+          <br />
+          <v-btn class="cyan" @click="signup">Register</v-btn>
+        </div>
+      </div>
+    </v-flex>
+  </v-layout>
 </template>
-
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
+
 export default {
   data () {
     return {
-      email: '',
+      username: '',
       password: '',
-      error: ''
+      success: false,
+      msg: '',
+      valid: true,
+      usernameRules: [
+        (v) => !!v || 'username is required',
+        (v) => v.length <= 3 || 'Name must be less than 3 characters'
+      ],
+      passRules: [
+        (v) => !!v || 'Password is required'
+      ]
     }
   },
   // watch: {
@@ -28,10 +44,23 @@ export default {
   methods: {
     async signup () {
       const response = await AuthenticationService.signup({
-        email: this.email,
+        username: this.username,
         password: this.password
       })
-      console.log(response.data)
+      this.success = response.data.success
+      this.msg = response.data.msg
+      console.log('msg', this.success, this.msg)
+      if (this.success) {
+        console.log('login success')
+      } else {
+        this.username = ''
+        this.password = ''
+        this.success = false
+      }
+    },
+    clear () {
+      this.username = ''
+      this.password = ''
     }
   }
   // mounted () {
@@ -44,5 +73,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.toolbar__title{
+  color:red
+}
 </style>

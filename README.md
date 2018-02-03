@@ -1,2 +1,2 @@
 # WebProject
-it is made Web Front-End using Vue.js 
+It's made web-project using vue.js and node.js
