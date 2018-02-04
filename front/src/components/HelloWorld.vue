@@ -1,10 +1,55 @@
 <template>
-<div>
-  <input type="username" name="username" v-model="username" placeholder="email" /><br />
-  <input type="password" name="password" v-model="password" placeholder="password" /><br />
-  <button @click="signin">Sign In</button>
-  <button @click="signup">Sign Up</button>
-</div>
+<v-app id="inspire">
+  <v-navigation-drawer fixed v-model="drawerRight" :stateless="right" right clipped app>
+    <v-list dense>
+      <v-list-tile @click.stop="right = !right">
+        <v-list-tile-action>
+          <v-icon>exit_to_app</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Open Temporary Drawer</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+  </v-navigation-drawer>
+  <v-toolbar color="blue-grey" dark fixed app clipped-right>
+    <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+    <v-toolbar-title>Toolbar</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-text-field type="username" name="username" v-model="username" placeholder="username" />
+    <v-text-field type="password" name="password" v-model="password" placeholder="password" />
+    <v-btn class="cyan" @click="signip">SignIp</v-btn>
+    <v-btn class="cyan" @click="signup">SignUp</v-btn>
+    <v-btn icon @click.stop="drawerRight =!drawerRight"><v-icon>exit_to_app</v-icon></v-btn>
+  </v-toolbar>
+  <v-navigation-drawer fixed v-model="drawer" :stateless="left" app>
+    <v-list dense>
+      <v-list-tile @click.stop="left = !left">
+        <v-list-tile-action>
+          <v-icon>exit_to_app</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Open Temporary Drawer</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+  </v-navigation-drawer>
+  <v-navigation-drawer temporary v-model="left" fixed></v-navigation-drawer>
+  <v-content>
+    <v-container fluid fill-height>
+      <v-layout justify-center align-center>
+        <v-tooltip right>
+        </v-tooltip>
+      </v-layout>
+    </v-container>
+  </v-content>
+  <v-navigation-drawer right temporary v-model="right" fixed></v-navigation-drawer>
+  <v-footer color="blue-grey" class="white--text" app>
+    <span>Vuetify</span>
+    <v-spacer></v-spacer>
+    <span>&copy; 2017</span>
+  </v-footer>
+</v-app>
 </template>
 
 <script>
@@ -13,7 +58,11 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      drawer: null,
+      drawerRight: null,
+      right: null,
+      left: null
     }
   },
   methods: {
@@ -36,6 +85,9 @@ export default {
     signup () {
       this.$router.push('/register')
     }
+  },
+  props: {
+    source: String
   }
 }
 </script>
