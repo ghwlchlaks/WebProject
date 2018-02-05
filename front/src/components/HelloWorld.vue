@@ -1,40 +1,60 @@
 <template>
 <v-app id="inspire">
-  <v-navigation-drawer fixed v-model="drawerRight" :stateless="right" right clipped app>
+  <!-- right drawer page -->
+  <v-navigation-drawer fixed v-model="drawerRight" right clipped app>
     <v-list dense>
-      <v-list-tile @click.stop="right = !right">
-        <v-list-tile-action>
-          <v-icon>exit_to_app</v-icon>
-        </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>Open Temporary Drawer</v-list-tile-title>
         </v-list-tile-content>
-      </v-list-tile>
     </v-list>
   </v-navigation-drawer>
-  <v-toolbar color="blue-grey" dark fixed app clipped-right>
-    <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+  <!-- main page toolbar title-->
+  <v-toolbar color="secondary" dark fixed app clipped-right>
+    <v-toolbar-side-icon @click.stop="drawerLeft = !drawerLeft"></v-toolbar-side-icon>
+    <v-spacer></v-spacer>
     <v-toolbar-title>Toolbar</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-text-field type="username" name="username" v-model="username" placeholder="username" />
-    <v-text-field type="password" name="password" v-model="password" placeholder="password" />
-    <v-btn class="cyan" @click="signip">SignIp</v-btn>
-    <v-btn class="cyan" @click="signup">SignUp</v-btn>
+    <v-btn color="cyan" @click="face_signin">facebook</v-btn>
+    <v-btn color="cyan" @click="twitter_signin">twitter</v-btn>
+    <v-btn color="cyan" @click="google_signin">google</v-btn>
+    <v-btn color="cyan" @click="kakao_signin">twitter</v-btn>
+    <v-btn color="cyan" @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
+    <v-btn class="cyan" @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
     <v-btn icon @click.stop="drawerRight =!drawerRight"><v-icon>exit_to_app</v-icon></v-btn>
   </v-toolbar>
-  <v-navigation-drawer fixed v-model="drawer" :stateless="left" app>
+  <!--signup dialog-->
+  <v-dialog v-model="isSignup" max-width="500px">
+    <v-card>
+      <v-card-text>
+        <v-text-field type="username" name="username" v-model="username" placeholder="username" />
+        <v-text-field type="password" name="password" v-model="password" placeholder="password" />
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="signup">Register</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <!-- signin dialog-->
+  <v-dialog v-model="isSignin" max-width="500px">
+    <v-card>
+      <v-card-text>
+        <v-text-field type="username" name="username" v-model="username" placeholder="username" />
+        <v-text-field type="password" name="password" v-model="password" placeholder="password" />
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="signin">Login</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <!-- left drawer page -->
+  <v-navigation-drawer fixed v-model="drawerLeft" app>
     <v-list dense>
-      <v-list-tile @click.stop="left = !left">
-        <v-list-tile-action>
-          <v-icon>exit_to_app</v-icon>
-        </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>Open Temporary Drawer</v-list-tile-title>
         </v-list-tile-content>
-      </v-list-tile>
     </v-list>
   </v-navigation-drawer>
-  <v-navigation-drawer temporary v-model="left" fixed></v-navigation-drawer>
+ <!-- center content-form in main page -->
   <v-content>
     <v-container fluid fill-height>
       <v-layout justify-center align-center>
@@ -43,7 +63,7 @@
       </v-layout>
     </v-container>
   </v-content>
-  <v-navigation-drawer right temporary v-model="right" fixed></v-navigation-drawer>
+  <!-- bottom-form in main page-->
   <v-footer color="blue-grey" class="white--text" app>
     <span>Vuetify</span>
     <v-spacer></v-spacer>
@@ -59,10 +79,12 @@ export default {
     return {
       username: '',
       password: '',
-      drawer: null,
-      drawerRight: null,
-      right: null,
-      left: null
+      drawerLeft: false,
+      drawerRight: false,
+      isSignup: false,
+      isSignin: false,
+      success: '',
+      msg: ''
     }
   },
   methods: {
@@ -82,7 +104,24 @@ export default {
       }
       console.log('this login msg : ', this.msg)
     },
-    signup () {
+    async face_signin () {
+      const response = await AuthenticationService.face_signin({
+
+      })
+      this.success = response.data.success
+      if (this.success) {
+        this.msg = response.data.token
+      } else {
+        this.msg = response.data.msg
+      }
+    },
+    async twitter_signin () {
+
+    },
+    async kakao_signin () {
+
+    },
+    async signup () {
       this.$router.push('/register')
     }
   },

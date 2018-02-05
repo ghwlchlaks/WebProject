@@ -6,5 +6,8 @@ export default {
   },
   signin (credentials) {
     return Api().post('signin', credentials)
+  },
+  face_signin (credentials) {
+    return Api().post('face_signin', credentials)
   }
 }
