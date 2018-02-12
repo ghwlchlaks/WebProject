@@ -1,14 +1,10 @@
 var express = require('express')
 var path = require('path')
-// var favicon = require('serve-favicon')
-var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var morgan = require('morgan')
 var cors = require('cors')
 var mongoose = require('mongoose')
 var passport = require('passport')
-var flash = require('connect-flash')
-var session = require('express-session')
 
 // reference config file
 var dbconfig = require('../config/database')
@@ -16,7 +12,7 @@ var dbconfig = require('../config/database')
 var index = require('../routes/index')
 
 var app = express()
-mongoose.connect(dbconfig.database)
+mongoose.connect(dbconfig.local_collection)
 mongoose.Promise = global.Promise
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error: '))
@@ -28,31 +24,33 @@ db.once('open', function (callback) {
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'ejs')
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(session({
-  secret: 'test',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {expires: new Date(Date.now() + (60 * 60 * 1000))}
-}))
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+//app.use(session({
+//  secret: 'test',
+//  resave: false,
+//  saveUninitialized: true,
+//  cookie: {expires: new Date(Date.now() + (60 * 60 * 1000))}
+//}))
+require('../config/passport_jwt')(passport)
+
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(flash())
-app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 
 // route main page
 app.use('/', index)
 // route login page
-app.use('/signup', index)
-app.use('/signin', index)
+app.use('/local_signup', index)
+app.use('/local_signin', index)
 
 app.use('/profile', index)
 

@@ -7,6 +7,7 @@
     "lint": "./node_modules/.bin/eslint **/*.js"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
@@ -15,15 +16,18 @@
     "ejs": "~2.5.7",
     "eslint": "^4.16.0",
     "express": "~4.15.5",
+    "express-session": "^1.15.6",
     "joi": "^13.1.1",
     "json": "^9.0.6",
     "jsonwebtoken": "^8.1.1",
     "mongo": "^0.1.0",
+    "mongoose": "^5.0.4",
     "morgan": "^1.9.0",
     "nodemon": "^1.14.11",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
     "passport-local": "^1.0.0",
+    "rand-token": "^0.4.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
