@@ -54,6 +54,7 @@ app.use('/local_signin', index)
 
 app.use('/profile', index)
 
+app.use('/songs', index)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found')

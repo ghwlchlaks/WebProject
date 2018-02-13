@@ -38,6 +38,7 @@ module.exports = {
                             expiresIn: 60 * 60 * 24 * 7
                         })
                         req.accessToken = 'JWT '+ token
+                        req.accessUser = user
                         next()
                     } else {
                         res.send({ success: false, message: 'Authencation failed . passwords did not match' })

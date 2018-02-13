@@ -14,12 +14,13 @@
     <v-spacer></v-spacer>
     <v-toolbar-title>Toolbar</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn color="cyan">facebook</v-btn>
-    <v-btn color="cyan">twitter</v-btn>
-    <v-btn color="cyan">google</v-btn>
-    <v-btn color="cyan">twitter</v-btn>
-    <v-btn color="cyan" @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
-    <v-btn class="cyan" @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
+    <v-btn v-if="!$store.state.isUserLoggedin" color="cyan">facebook</v-btn>
+    <v-btn v-if="!$store.state.isUserLoggedin" color="cyan">twitter</v-btn>
+    <v-btn v-if="!$store.state.isUserLoggedin" color="cyan">google</v-btn>
+    <v-btn v-if="!$store.state.isUserLoggedin" color="cyan">twitter</v-btn>
+    <v-btn v-if="!$store.state.isUserLoggedin" color="cyan" @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
+    <v-btn v-if="!$store.state.isUserLoggedin" class="cyan" @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
+    <v-btn v-if="$store.state.isUserLoggedin" class="cyan" @click="logout">logout</v-btn>
     <v-btn icon @click.stop="drawerRight =!drawerRight"><v-icon>exit_to_app</v-icon></v-btn>
   </v-toolbar>
   <!--signup dialog-->
@@ -39,7 +40,7 @@
   <v-dialog v-model="isSignin" max-width="500px">
     <v-card>
       <v-card-text>
-        <v-text-field type="username" name="username" v-model="username" placeholder="username" />
+        <v-text-field type="email" name="email" v-model="email" placeholder="email" />
         <v-text-field type="password" name="password" v-model="password" placeholder="password" />
       </v-card-text>
       <v-card-actions>
@@ -112,17 +113,23 @@ export default {
         password: this.password
       })
       this.$store.dispatch('setToken', response.data.token)
-      this.$store.dispatch('setUser', response.data.user)
+      this.$store.dispatch('setUser', response.data.user.local)
       this.success = response.data.success
       if (this.success) {
         this.msg = response.data.token
+        this.isSignin = false
       } else {
         this.$router.push('/')
         this.username = ''
         this.password = ''
         this.msg = response.data.msg
       }
-      console.log('this login msg : ', this.msg)
+    },
+    logout () {
+      this.$store.dispatch('setToken', null)
+      this.$store.dispatch('setUser', null)
+      // redirect home page
+      this.$router.push('/')
     }
   },
   props: {
