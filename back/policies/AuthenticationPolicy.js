@@ -12,16 +12,21 @@ module.exports = {
         // const {error, value} = Joi.validate(req.body, schema)
         const { error } = Joi.validate(req.body, schema)
         if (error) {
+            console.log('err : ', error)
             switch (error.detalis[0].context.key) {
                 case 'username':
+                    console.log('vaild username')
                     res.send({ success: false, error: 'you must provide a valid username' })
                     break
                 case 'password':
+                    console.log('vaild password')
                     res.send({ success: false, error: 'the passwod provided failed to match the following rules' })
                     break
                 case 'email':
+                    console.log('vaild email')
                     res.send({ success: false, error: 'the email provied failed to match the following rules ' })
                 default:
+                    console.log('vaild registration information')
                     res.send({ success: false, error: 'Invalid registration informaion' })
             }
         } else {

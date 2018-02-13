@@ -13,9 +13,9 @@ router.post('/local_signup', AuthenticationPolicy.signup, function (req, res) {
         res.json({ success: false, msg: 'Please pass username and password.' })
     } else {
         var newUser = new User()
+        newUser.local.email = req.body.email
         newUser.local.username = req.body.username
         newUser.local.password = req.body.password
-        newUser.local.email = req.body.email
         newUser.local.role = "Client"
         newUser.save(function (err) {
             if (err) {
