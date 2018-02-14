@@ -36,7 +36,7 @@ router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, re
 })
 
 router.get('/songs', SongsController.index)
-
+router.post('/songs',SongsController.post)
 
 
 module.exports = router
