@@ -4,10 +4,14 @@ var Schema = mongoose.Schema
 
 var userSchema = new Schema({
     local: {
-        username: { type: String, unique: true, required: true },
-        password: { type: String, unique: true, required: true },
         email: { type: String, unique: true, required: true, lowercase: true },
-        role: { type: String, role_list: ['Client', 'Manager', 'Admin'], default: 'Client' }
+        password: { type: String, required: true },
+        username: { type: String, required: true },
+        country: { type: String, required: true },
+        wantedLanguage: { type: String },
+        NickName: { type: String },
+        role: { type: String, role_list: ['Client', 'Manager', 'Admin'], default: 'Client' },
+        authencation: {type: Boolean, default: false}
     },
     facebook: {
         id: { type: String },

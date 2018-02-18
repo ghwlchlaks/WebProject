@@ -9,16 +9,22 @@ const User = require('../models/user')
 const config = require('../config/database')
 
 const SongsController = require('../policies/SongsContoller')
+const NoticeBoarderController = require('../policies/NoticeBoarderController')
 
 router.post('/local_signup', AuthenticationPolicy.signup, function (req, res) {
     if (!req.body.username || !req.body.password) {
         res.json({ success: false, msg: 'Please pass username and password.' })
     } else {
         var newUser = new User()
-        newUser.local.email = req.body.email
-        newUser.local.username = req.body.username
+        newUser.local.email = req.body.email        
         newUser.local.password = req.body.password
+        newUser.local.username = req.body.username
+        newUser.local.country = req.body.country
+        newUser.local.wantedLanguage = req.body.wantedLanguage
+        newUser.local.nickName = req.body.nickName
+        newUser.local.sex = req.body.sex
         newUser.local.role = "Client"
+        newUser.local.authencation = 0
         newUser.save(function (err) {
             if (err) {
                 return res.json({success: false, msg: 'Username already exists.' })
@@ -38,5 +44,6 @@ router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, re
 router.get('/songs', SongsController.index)
 router.post('/songs',SongsController.post)
 
+router.get('/:boardId', NoticeBoarderController.showNoticeBoard)
 
 module.exports = router
