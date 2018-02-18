@@ -5,6 +5,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Songs from '@/components/Profile'
 import CreateSong from '@/components/CreateSong'
 import ViewSong from '@/components/ViewSong'
+import NoticeBoard from '@/components/NoticeBoard'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/songs/:songId',
       name: 'Song',
       component: ViewSong
+    },
+    {
+      path: '/:boardId',
+      name: 'NoticeBoard',
+      component: NoticeBoard
     }
   ]
 })

@@ -5,7 +5,7 @@
       <v-toolbar-side-icon @click.stop="drawerLeft = !drawerLeft"></v-toolbar-side-icon>
       <v-toolbar-title class="white--text">Title</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!$store.state.isUserLoggedin" flat @click="debug" >facebook</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" flat >facebook</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat >twitter</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat >google</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat >twitter</v-btn>
@@ -29,7 +29,7 @@
                   <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
-              <v-list-tile v-for="subItem in item.items" :key="subItem.title">
+              <v-list-tile v-for="subItem in item.items" :key="subItem.title" @click="subItemClick({name:'NoticeBoard', params: {boardId:subItem.route_name}})">
                 <v-list-tile-content>
                   <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
                 </v-list-tile-content>
@@ -47,6 +47,10 @@
         <v-text-field type="email" name="email" v-model="email" placeholder="email" />
         <v-text-field type="password" name="password" v-model="password" placeholder="password" />
         <v-text-field type="username" name="username" v-model="username" placeholder="username" />
+        <v-text-field type="country" name="country" v-model="country" placeholder="country" />
+        <v-text-field type="wantedLanguage" name="wantedLanguage" v-model="wantedLanguage" placeholder="wantedLanguage" />
+        <v-text-field type="nickName" name="nickName" v-model="nickName" placeholder="nickName" />
+        <v-text-field type="sex" name="sex" v-model="sex" placeholder="sex" />
       </v-card-text>
         <v-card-actions>
           <v-btn @click="local_signup">Register</v-btn>
@@ -73,9 +77,13 @@ import AuthenticationService from '@/services/AuthenticationService'
 export default {
   data () {
     return {
-      username: '',
-      password: '',
       email: '',
+      password: '',
+      username: '',
+      country: '',
+      wantedLanguage: '',
+      nickName: '',
+      sex: '',
       success: '',
       msg: '',
       drawerLeft: false,
@@ -84,16 +92,15 @@ export default {
       isSignin: false,
       items: [
         {
-          action: 'local_activity',
-          title: 'Attractions',
+          action: 'videogame_asset',
+          title: 'Game',
           items: [
-            { title: 'List Item' }
+            {title: 'Shotting Game', route_name: 'shotting'}
           ]
         },
         {
-          action: 'restaurant',
-          title: 'Dining',
-          active: true,
+          action: 'shopping_basket',
+          title: 'Shop',
           items: [
             { title: 'Breakfast & brunch' },
             { title: 'New American' },
@@ -101,38 +108,28 @@ export default {
           ]
         },
         {
-          action: 'school',
-          title: 'Education',
-          items: [
-            { title: 'List Item' }
-          ]
-        },
-        {
           action: 'directions_run',
-          title: 'Family',
+          title: 'Sports',
           items: [
-            { title: 'List Item' }
+            {title: 'Soccer', route_name: 'scoccer'},
+            {title: 'basketball', route_name: 'basketball'},
+            {title: 'baseball', route_name: 'baseball'}
           ]
         },
         {
-          action: 'healing',
-          title: 'Health',
+          action: 'queue_music',
+          title: 'Music',
           items: [
-            { title: 'List Item' }
+            {title: 'K-pop', route_name: 'kpop'},
+            { title: 'pop', route_name: 'pop' }
           ]
         },
         {
-          action: 'content_cut',
-          title: 'Office',
+          action: 'airplanemode_active',
+          title: 'Travel',
           items: [
-            { title: 'List Item' }
-          ]
-        },
-        {
-          action: 'local_offer',
-          title: 'Promotions',
-          items: [
-            { title: 'List Item' }
+            { title: 'North America', route_name: 'northamerica' },
+            { title: 'Asia', route_name: 'asia' }
           ]
         }
       ]
@@ -143,7 +140,11 @@ export default {
       const response = await AuthenticationService.local_signup({
         email: this.email,
         password: this.password,
-        username: this.username
+        username: this.username,
+        country: this.country,
+        wantedLanguage: this.wantedLanguage,
+        nickName: this.nickName,
+        sex: this.sex
       })
       this.success = response.data.success
       this.msg = response.data.message
@@ -179,11 +180,8 @@ export default {
       // redirect home page
       this.$router.push('/')
     },
-    listClick (title) {
-      console.log('list click! ', title)
-    },
-    debug () {
-      console.log('this items', this.items[0].title)
+    subItemClick (subTitle) {
+      this.$router.push(subTitle)
     }
   },
   props: {
