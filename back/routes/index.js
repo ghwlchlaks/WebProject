@@ -24,7 +24,7 @@ router.post('/local_signup', AuthenticationPolicy.signup, function (req, res) {
         newUser.local.nickName = req.body.nickName
         newUser.local.sex = req.body.sex
         newUser.local.role = "Client"
-        newUser.local.authencation = 0
+        newUser.local.authencation = false
         newUser.save(function (err) {
             if (err) {
                 return res.json({success: false, msg: 'Username already exists.' })

@@ -1,13 +1,24 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
-var SoccerSchema = new Schema({
-   title : {type:String, require:true},
-   content : {type:String, require:true},
-   comment : {type:String, require:true},
-   writeUser : {type:String, require:true},
-   createTime : {type:String, require:true},
-   modifyTime : {type:String, require:true}
+var NoticeBoardSchema = new Schema({
+    soccer: {
+        title : {type:String, require:true},
+        content : {type:String, require:true},
+        comment : [{type: String},{type: Date}],
+        writeUser : {type:String, require:true},
+        createTime : {type:Date, require:true},
+        modifyTime : {type:Date, require:true}
+    },
+    baseball: {
+        title : {type:String, require:true},
+        content : {type:String, require:true},
+        comment : [{type: String},{type: Date}],
+        writeUser : {type:String, require:true},
+        createTime : {type:Date, require:true},
+        modifyTime : {type:Date, require:true}
+    }
 })
 
-module.exports = mongoose.model('Soccer', SoccerSchema)
+module.exports = mongoose.model('NoticeBoard', NoticeBoardSchema)
+
