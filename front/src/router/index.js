@@ -6,6 +6,7 @@ import Songs from '@/components/Profile'
 import CreateSong from '@/components/CreateSong'
 import ViewSong from '@/components/ViewSong'
 import NoticeBoard from '@/components/NoticeBoard'
+import AddBoard from '@/components/AddBoard'
 
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/:boardId',
       name: 'NoticeBoard',
       component: NoticeBoard
+    },
+    {
+      path: '/:boardId/:stateBoard',
+      name: 'AddBoard',
+      component: AddBoard
     }
   ]
 })

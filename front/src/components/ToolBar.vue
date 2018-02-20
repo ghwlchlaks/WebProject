@@ -111,7 +111,7 @@ export default {
           action: 'directions_run',
           title: 'Sports',
           items: [
-            {title: 'Soccer', route_name: 'scoccer'},
+            {title: 'Soccer', route_name: 'soccer'},
             {title: 'basketball', route_name: 'basketball'},
             {title: 'baseball', route_name: 'baseball'}
           ]

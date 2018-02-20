@@ -1,4 +1,7 @@
 <template>
+<v-app>
+  <v-btn dark  @click="AddContents({name:'AddBoard', params: {stateBoard:'Add'}})">Add</v-btn>
+</v-app>
 </template>
 <script>
 import NoticeBoardService from '@/services/NoticeBoardService'
@@ -14,6 +17,9 @@ export default {
     console.log(data)
   },
   methods: {
+    AddContents (route) {
+      this.$router.push(route)
+    }
   }
 }
 </script>
