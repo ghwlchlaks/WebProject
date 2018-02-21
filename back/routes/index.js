@@ -45,5 +45,6 @@ router.get('/songs', SongsController.index)
 router.post('/songs',SongsController.post)
 
 router.get('/:boardId', NoticeBoarderController.showNoticeBoard)
+router.post('/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 
 module.exports = router
