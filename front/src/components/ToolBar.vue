@@ -29,7 +29,7 @@
                   <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
-              <v-list-tile v-for="subItem in item.items" :key="subItem.title" @click="subItemClick({name:'NoticeBoard', params: {boardId:subItem.route_name}})">
+              <v-list-tile v-for="subItem in item.items" :key="subItem.title" @click="subItemClick({name:'NoticeBoard', params: {boardId:subItem.route_name, index:1}})">
                 <v-list-tile-content>
                   <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
                 </v-list-tile-content>
@@ -69,6 +69,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-footer class="pa-3" app clipped>
+    <div>&copy; {{ new Date().getFullYear() }}</div>
+  </v-footer>
   </v-app>
 </template>
 

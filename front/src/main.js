@@ -7,8 +7,10 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import store from '../store/store'
 import {sync} from 'vuex-router-sync'
+import BootstrapVue from 'bootstrap-vue'
 
 Vue.use(Vuetify)
+Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 

@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "bootstrap-vue": "^2.0.0-rc.1",
+    "v-infinite-scroll": "^1.0.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.0",

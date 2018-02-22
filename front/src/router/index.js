@@ -33,7 +33,7 @@ export default new Router({
       component: ViewSong
     },
     {
-      path: '/:boardId',
+      path: '/:boardId/:index',
       name: 'NoticeBoard',
       component: NoticeBoard
     },
