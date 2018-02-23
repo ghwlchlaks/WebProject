@@ -44,6 +44,11 @@ export default {
   },
   methods: {
     AddContents (route) {
+      if (!this.$store.state.isUserLoggedin) {
+        alert('로그인후 이용가능합니다.')
+        this.$router.push('/')
+        return
+      }
       this.$router.push(route)
     },
     test (record, index) {

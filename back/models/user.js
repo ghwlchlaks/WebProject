@@ -2,27 +2,28 @@ var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs')
 var Schema = mongoose.Schema
 
-var userSchema = new Schema({
-    local: {
-        email: { type: String, unique: true, required: true, lowercase: true },
-        password: { type: String, required: true },
-        username: { type: String, required: true },
-        country: { type: String, required: true },
-        wantedLanguage: { type: String },
-        NickName: { type: String },
-        role: { type: String, role_list: ['Client', 'Manager', 'Admin'], default: 'Client' },
-        authencation: {type: Boolean, default: false}
-    },
+var LocalUserSchema = new Schema({
+    email: { type: String, unique: true, required: true, lowercase: true },
+    password: { type: String, required: true },
+    username: { type: String, required: true },
+    country: { type: String, required: true },
+    wantedLanguage: { type: String },
+    nickName: { type: String },
+    sex: {type: String, required: true},
+    role: { type: String, role_list: ['Client', 'Manager', 'Admin'], default: 'Client' },
+    token: {type: String}
+
+})
+var FBUserSchema = new Schema({
     facebook: {
-        id: { type: String },
-        token: { type: String }
-        //  email: {type: String},
+        email: { type: String, unique: true, required: true, lowercase:true},
+        token: { type: String, required: true }
     }
 })
 
 //local account pre_save
-userSchema.pre('save', function (next) {
-    var user = this.local
+LocalUserSchema.pre('save', function (next) {
+    var user = this
     if (user.isModified('password') || user.isNew) {
         bcrypt.genSalt(10, function (err, salt) {
             if (err) {
@@ -42,8 +43,8 @@ userSchema.pre('save', function (next) {
 })
 
 //local account compared password using bcrypt 
-userSchema.methods.comparePassword = function (passw, cb) {
-    bcrypt.compare(passw, this.local.password, function (err, isMatch) {
+LocalUserSchema.methods.comparePassword = function (passw, cb) {
+    bcrypt.compare(passw, this.password, function (err, isMatch) {
         if (err) {
             return cb(err)
         }
@@ -51,4 +52,10 @@ userSchema.methods.comparePassword = function (passw, cb) {
     })
 }
 
-module.exports = mongoose.model('User', userSchema)
+var LocalUser = mongoose.model('LocalUser', LocalUserSchema)
+var FBUser = mongoose.model('FBUser', FBUserSchema)
+
+module.exports = {
+    LocalUser : LocalUser,
+    FBUser : FBUser
+}

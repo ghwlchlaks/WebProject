@@ -154,6 +154,7 @@ export default {
       if (this.success) {
         this.msg = response.data.message
         console.log('signup success! ', this.msg)
+        console.log('token! ', response.data.token)
       } else {
         this.msg = response.data.error
         console.log('signup fail! ', this.msg)
