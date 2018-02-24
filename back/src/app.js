@@ -5,7 +5,6 @@ var morgan = require('morgan')
 var cors = require('cors')
 var mongoose = require('mongoose')
 var passport = require('passport')
-
 // reference config file
 var dbconfig = require('../config/database')
 // reference routes file
@@ -29,28 +28,43 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-//app.use(session({
+   // Website you wish to allow to connect
+   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');
+
+   // Request methods you wish to allow
+   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+   // Request headers you wish to allow
+   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+   // Set to true if you need the website to include cookies in the requests sent
+   // to the API (e.g. in case you use sessions)
+   res.setHeader('Access-Control-Allow-Credentials', true);
+
+   // Pass to next layer of middleware
+   next();
+})
+// app.use(session({
 //  secret: 'test',
 //  resave: false,
 //  saveUninitialized: true,
 //  cookie: {expires: new Date(Date.now() + (60 * 60 * 1000))}
-//}))
-require('../config/passport_jwt')(passport)
+// }))
 
+require('../policies/FBAuthenticationManager')(passport)
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(bodyParser.json())
 app.use(cors())
 
 // route main page
-app.use('/', index)
+app.use('/', index,)
 // route login page
 app.use('/local_signup', index)
 app.use('/local_signin', index)
+
+app.use('/facebook', index)
+app.use('/facebook/callback', index)
 
 app.use('/profile', index)
 
