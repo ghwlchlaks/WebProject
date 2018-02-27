@@ -15,16 +15,14 @@ var LocalUserSchema = new Schema({
 
 })
 var FBUserSchema = new Schema({
-    facebook: {
-        email: { type: String, unique: true, required: true, lowercase:true},
-        token: { type: String, required: true },
-        username : {type: String},
-        country :  {type: String},
-        wantedLanguage: {type: String},
-        nickName:{type:String},
-        sex: {type:String},
-        role:{type:String, role_list: ['Client','Manager', 'Admin'],default: 'Client'},
-    }
+    email: { type: String, unique: true, required: true, lowercase:true},
+    token: { type: String, required: true },
+    username : {type: String},
+    country :  {type: String},
+    wantedLanguage: {type: String},
+    nickName:{type:String},
+    sex: {type:String},
+    role:{type:String, role_list: ['Client','Manager', 'Admin'],default: 'Client'},
 })
 
 //local account pre_save

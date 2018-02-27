@@ -8,9 +8,21 @@ module.exports = function (passport) {
         clientSecret: fbConfig.clientSecret,
         callbackURL: fbConfig.callbackURL
     }, function (accessToken, refreshToken, profile, done) {
-        FBUser.findOrCreate({ email: profile.id }, function (err, user) {
+        fbuser = new FBUser({
+            email : profile.id,
+            token :'1',
+        })
+        console.log('accessToken : ',accessToken)
+        fbuser.save(function (err, user) {
             console.log(profile)
             return done(err, user)
         })
     }))
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+      
+    passport.deserializeUser(function(user, done) {
+        done(null, user);
+    });
 }

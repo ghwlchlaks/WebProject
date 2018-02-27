@@ -5,7 +5,7 @@
       <v-toolbar-side-icon @click.stop="drawerLeft = !drawerLeft"></v-toolbar-side-icon>
       <v-toolbar-title class="white--text">Title</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!$store.state.isUserLoggedin" @click="FBlogin" flat >facebook</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" @click="socialLogin('facebook')" flat >facebook</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat >twitter</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat >google</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat >twitter</v-btn>
@@ -186,6 +186,10 @@ export default {
       } else {
         this.$router.push('/')
       }
+    },
+    async socialLogin (socialName) {
+      var serverName = 'http://localhost:8082/' + socialName
+      window.location.href = serverName
     },
     logout () {
       this.$store.dispatch('setToken', null)

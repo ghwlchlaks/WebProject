@@ -1,3 +1,4 @@
+// reference npm module
 var express = require('express')
 var path = require('path')
 var bodyParser = require('body-parser')
@@ -5,6 +6,7 @@ var morgan = require('morgan')
 var cors = require('cors')
 var mongoose = require('mongoose')
 var passport = require('passport')
+
 // reference config file
 var dbconfig = require('../config/database')
 // reference routes file
@@ -27,23 +29,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(function (req, res, next) {
-   // Website you wish to allow to connect
-   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');
 
-   // Request methods you wish to allow
-   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-   // Request headers you wish to allow
-   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-   // Set to true if you need the website to include cookies in the requests sent
-   // to the API (e.g. in case you use sessions)
-   res.setHeader('Access-Control-Allow-Credentials', true);
-
-   // Pass to next layer of middleware
-   next();
-})
 // app.use(session({
 //  secret: 'test',
 //  resave: false,
@@ -57,19 +43,17 @@ app.use(passport.session())
 app.use(bodyParser.json())
 app.use(cors())
 
-// route main page
-app.use('/', index,)
 // route login page
-app.use('/local_signup', index)
-app.use('/local_signin', index)
+app.post('/local_signup', index)
+app.post('/local_signin', index)
 
-app.use('/facebook', index)
-app.use('/facebook/callback', index)
+app.get('/facebook',index)
+app.get('/facebook/callback', index)
 
-app.use('/profile', index)
+app.get('/profile', index)
 
-app.use('/songs', index)
-app.use('/:boardId', index)
+app.get('/songs', index)
+app.get('/:boardId', index)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

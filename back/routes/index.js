@@ -16,12 +16,17 @@ router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, re
 })
 
 router.get('/facebook',passport.authenticate('facebook'))
-router.get('/facebook/callback',passport.authenticate('facebook',{failureRedirect: '/'}),function(req, res){
-    loginSuccessHandler(req, res)
+router.get('/facebook/callback',passport.authenticate('facebook',{failureRedirect: 'http://localhost:8080/#/'}),function(req, res){
+    if(req.user){
+        return res.redirect(303, 'http://localhost:8080/#/')
+    }
+    else{
+        return res.send({msg:'not found'})
+    }
 })
 
 function loginSuccessHandler(req, res){
-    res.send({success:true, msg:'login success', token: user.accessToken , user:user })
+    res.send({success:true, msg:'login success' })
 }
 
 router.get('/:boardId', NoticeBoarderController.showNoticeBoard)
