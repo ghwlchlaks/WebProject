@@ -47,13 +47,14 @@ app.use(cors())
 app.post('/local_signup', index)
 app.post('/local_signin', index)
 
-app.get('/facebook',index)
-app.get('/facebook/callback', index)
-
 app.get('/profile', index)
 
-app.get('/songs', index)
-app.get('/:boardId', index)
+app.get('/:boardId/:index', index)
+app.post('/:boardId/:stateBoard', index)
+
+// app.get('/facebook',index)
+// app.get('/facebook/callback', index)
+//app.get('/songs', index)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

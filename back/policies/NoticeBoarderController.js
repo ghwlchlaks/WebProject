@@ -4,12 +4,14 @@ const Basketball = require('../models/NoticeBoard').basketball
 module.exports = {
     async showNoticeBoard(req, res) {
         var route_id = req.params.boardId
+        var route_index =req.params.index
         var board = null
         if (route_id =='soccer') board= Soccer
         else if (route_id=='basketball') board= Basketball
-
-        await board.find({}, function (err, result) {
-            if (err) res.status(500).send({ success: false, message: 'an error has accured tring to fetch the songs' })
+        var index = parseInt(route_index) * 10
+        // return every 10 rows of table data
+        await board.find({},{limit:5}, function (err, result) {
+            if (err) res.status(500).send({ success: false, message: 'an error has accured tring to fetch the Noticeboards' })
             res.send(result)
         })
     },

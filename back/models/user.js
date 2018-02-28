@@ -11,18 +11,9 @@ var LocalUserSchema = new Schema({
     nickName: { type: String },
     sex: {type: String, required: true},
     role: { type: String, role_list: ['Client', 'Manager', 'Admin'], default: 'Client' },
-    token: {type: String}
+    token: {type: String},
+    provider : {type:String}
 
-})
-var FBUserSchema = new Schema({
-    email: { type: String, unique: true, required: true, lowercase:true},
-    token: { type: String, required: true },
-    username : {type: String},
-    country :  {type: String},
-    wantedLanguage: {type: String},
-    nickName:{type:String},
-    sex: {type:String},
-    role:{type:String, role_list: ['Client','Manager', 'Admin'],default: 'Client'},
 })
 
 //local account pre_save
@@ -57,9 +48,23 @@ LocalUserSchema.methods.comparePassword = function (passw, cb) {
 }
 
 var LocalUser = mongoose.model('LocalUser', LocalUserSchema)
-var FBUser = mongoose.model('FBUser', FBUserSchema)
 
 module.exports = {
     LocalUser : LocalUser,
-    FBUser : FBUser
+   // FBUser : FBUser
 }
+
+
+// var FBUserSchema = new Schema({
+//     fb_id: { type: String, unique: true, required: true, lowercase:true},
+//     email: {type:String},
+//     token: { type: String, required: true },
+//     username : {type: String},
+//     country :  {type: String},
+//     wantedLanguage: {type: String},
+//     nickName:{type:String},
+//     sex: {type:String},
+//     role:{type:String, role_list: ['Client','Manager', 'Admin'],default: 'Client'},
+//     provider: {type:String}
+// })
+// var FBUser = mongoose.model('FBUser', FBUserSchema)

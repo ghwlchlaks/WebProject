@@ -15,21 +15,23 @@ router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, re
     res.json({ success: true, token:req.accessToken, message: 'welcome in Area' + req.acceptUser })
 })
 
-router.get('/facebook',passport.authenticate('facebook'))
-router.get('/facebook/callback',passport.authenticate('facebook',{failureRedirect: 'http://localhost:8080/#/'}),function(req, res){
-    if(req.user){
-        return res.redirect(303, 'http://localhost:8080/#/')
-    }
-    else{
-        return res.send({msg:'not found'})
-    }
-})
-
-function loginSuccessHandler(req, res){
-    res.send({success:true, msg:'login success' })
-}
-
-router.get('/:boardId', NoticeBoarderController.showNoticeBoard)
+router.get('/:boardId/:index', NoticeBoarderController.showNoticeBoard)
 router.post('/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 
+
+// router.get('/facebook',passport.authenticate('facebook',{scope:['email']}))
+// router.get('/facebook/callback',passport.authenticate('facebook',{failureRedirect: 'http://localhost:8080/#/'}),function(req, res){
+//     if(req.user){
+//         loginSuccessHandler(req,res)
+//     }
+//     else{
+//         return res.send({msg:'not found'})
+//     }
+// })
+
+// function loginSuccessHandler(req, res){
+//     res.send({success:true,msg:'login success', user: req.user, token: req.user.token})
+//     console.log('req.user : ',req.user)
+//     return res.redirect(303, 'http://localhost:8080/#/')
+// }
 module.exports = router
