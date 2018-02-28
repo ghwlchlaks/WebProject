@@ -5,10 +5,6 @@
       <v-toolbar-side-icon @click.stop="drawerLeft = !drawerLeft"></v-toolbar-side-icon>
       <v-toolbar-title class="white--text">Title</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!$store.state.isUserLoggedin" @click="socialLogin('facebook')" flat >facebook</v-btn>
-      <v-btn v-if="!$store.state.isUserLoggedin" flat >twitter</v-btn>
-      <v-btn v-if="!$store.state.isUserLoggedin" flat >google</v-btn>
-      <v-btn v-if="!$store.state.isUserLoggedin" flat >twitter</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat  @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat  @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
       <v-btn v-if="$store.state.isUserLoggedin"  flat @click="logout">logout</v-btn>
@@ -152,8 +148,6 @@ export default {
       this.success = response.data.success
       this.msg = response.data.message
       if (this.success) {
-        this.msg = response.data.message
-        console.log('signup success! ', this.msg)
         console.log('token! ', response.data.token)
       } else {
         this.msg = response.data.error
@@ -177,19 +171,6 @@ export default {
         this.password = ''
         this.msg = response.data.msg
       }
-    },
-    async FBlogin () {
-      const response = await AuthenticationService.face_signin()
-      if (response.success) {
-        console.log('FBaccessToken : ', response.accessToken)
-        console.log('FBUser : ', response.user)
-      } else {
-        this.$router.push('/')
-      }
-    },
-    async socialLogin (socialName) {
-      var serverName = 'http://localhost:8082/' + socialName
-      window.location.href = serverName
     },
     logout () {
       this.$store.dispatch('setToken', null)

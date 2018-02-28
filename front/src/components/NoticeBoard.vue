@@ -1,6 +1,7 @@
 <template>
 <v-app class='noticeboard'>
   <v-content>
+  <v-alert type='success' :value='true'>{{board_name}}</v-alert>
   <b-table class='cyan' striped hover :items="items" @row-clicked="test"></b-table>
   <b-pagination-nav class='pagination' :number-of-pages="5" :link-gen="linkGen" v-model="currentPage"></b-pagination-nav>
   </v-content>
@@ -12,7 +13,7 @@ import NoticeBoardService from '@/services/NoticeBoardService'
 export default {
   data () {
     return {
-      board_content: null,
+      board_name: null,
       currentPage: 1,
       baseurl: null,
       items: [{
@@ -36,11 +37,22 @@ export default {
       ]
     }
   },
+  watch: {
+    // table number initilze and routing when board changed
+    '$route.params.boardId': async function (boardId) {
+      this.initialize(boardId)
+      this.getData(boardId, 1)
+    },
+    currentPage (val) {
+      // '$route.params.boardId overap to function called when var === 1'
+      if (val !== 1) {
+        this.getData(this.board_name, val)
+      }
+    }
+  },
   async mounted () {
     const boardId = this.$store.state.route.params.boardId
-    const data = await NoticeBoardService.show(boardId)
-    this.baseurl = '#/' + boardId
-    console.log(data)
+    this.initialize(boardId)
   },
   methods: {
     AddContents (route) {
@@ -57,6 +69,17 @@ export default {
     },
     linkGen (pageNum) {
       return '/' + this.baseurl + '/' + pageNum
+    },
+    initialize (boardId) {
+      this.board_name = boardId
+      this.baseurl = '#/' + boardId
+      this.currentPage = 1
+      this.linkGen(1)
+    },
+    async getData (boardId, index) {
+      console.log('boardId ' + boardId + 'index ' + index)
+      const data = await NoticeBoardService.show(boardId, index)
+      console.log(data)
     }
   }
 }
