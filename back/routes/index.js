@@ -19,6 +19,11 @@ router.get('/:boardId/:index', NoticeBoarderController.showNoticeBoard)
 router.post('/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 
 
+
+module.exports = router
+
+
+//facebook login system 
 // router.get('/facebook',passport.authenticate('facebook',{scope:['email']}))
 // router.get('/facebook/callback',passport.authenticate('facebook',{failureRedirect: 'http://localhost:8080/#/'}),function(req, res){
 //     if(req.user){
@@ -34,4 +39,3 @@ router.post('/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 //     console.log('req.user : ',req.user)
 //     return res.redirect(303, 'http://localhost:8080/#/')
 // }
-module.exports = router

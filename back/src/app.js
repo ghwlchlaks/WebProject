@@ -13,6 +13,7 @@ var dbconfig = require('../config/database')
 var index = require('../routes/index')
 
 var app = express()
+
 mongoose.connect(dbconfig.local_collection)
 mongoose.Promise = global.Promise
 var db = mongoose.connection
@@ -24,19 +25,16 @@ db.once('open', function (callback) {
 // view engine setup
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'ejs')
-
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
-
 // app.use(session({
 //  secret: 'test',
 //  resave: false,
 //  saveUninitialized: true,
 //  cookie: {expires: new Date(Date.now() + (60 * 60 * 1000))}
 // }))
-
 require('../policies/FBAuthenticationManager')(passport)
 app.use(passport.initialize())
 app.use(passport.session())
