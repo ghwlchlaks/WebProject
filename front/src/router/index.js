@@ -7,6 +7,7 @@ import CreateSong from '@/components/CreateSong'
 import ViewSong from '@/components/ViewSong'
 import NoticeBoard from '@/components/NoticeBoard'
 import AddBoard from '@/components/AddBoard'
+import ViewContent from '@/components/ViewContent'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
       path: '/:boardId/:stateBoard',
       name: 'AddBoard',
       component: AddBoard
+    },
+    {
+      path: '/:boardId/:stateBoard/:index',
+      name: 'ViewContent',
+      component: ViewContent
     }
   ]
 })

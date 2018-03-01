@@ -18,6 +18,7 @@ router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, re
 router.get('/:boardId/:index', NoticeBoarderController.showNoticeBoard)
 router.post('/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 
+router.get('/:boardId/:stateBoard/:index', NoticeBoarderController.showContent)
 
 
 module.exports = router

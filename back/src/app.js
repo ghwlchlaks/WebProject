@@ -29,12 +29,6 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
-// app.use(session({
-//  secret: 'test',
-//  resave: false,
-//  saveUninitialized: true,
-//  cookie: {expires: new Date(Date.now() + (60 * 60 * 1000))}
-// }))
 require('../policies/FBAuthenticationManager')(passport)
 app.use(passport.initialize())
 app.use(passport.session())
@@ -49,6 +43,8 @@ app.get('/profile', index)
 
 app.get('/:boardId/:index', index)
 app.post('/:boardId/:stateBoard', index)
+app.get('/:boardId/:stateBoard/:index', index)
+
 
 // app.get('/facebook',index)
 // app.get('/facebook/callback', index)

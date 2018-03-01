@@ -6,5 +6,8 @@ export default {
   },
   add (boardId, stateId, data) {
     return Api().post(`/${boardId}/${stateId}`, data)
+  },
+  contentView (boardId, stateId, index) {
+    return Api().get(`/${boardId}/${stateId}/${index}`)
   }
 }

@@ -37,6 +37,25 @@ module.exports = {
                 res.send({success:true,message:'mongodb save success!'})
             })
         }
+    },
+    async showContent(req, res) {
+        var board = null
+        var route_id = req.params.boardId
+        var route_state = req.params.stateBoard
+        var route_index = req.params.index
+        var query_string ={}
+        var query_id= route_id+'_id'
 
+        query_string[query_id]=route_index
+        
+        if(route_id =='soccer') board = Soccer
+        else if(route_id == 'basketball') board = Basketball
+
+        if(route_state=='View'){
+            await board.findOne(query_string, function(err, result){
+                if(err) res.status(500).send({success: false, error: 'mongodb select fail'})
+                res.send(result)
+            })
+        }
     }
 }

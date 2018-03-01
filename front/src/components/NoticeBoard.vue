@@ -2,7 +2,7 @@
 <v-app class='noticeboard'>
   <v-content>
   <v-alert type='success' :value='true'>{{board_name}}</v-alert>
-  <b-table class='cyan' striped hover :items="items" @row-clicked="rowClick_test"></b-table>
+  <b-table class='cyan' striped hover :items="items" @row-clicked="rowClick"></b-table>
   <b-pagination-nav class='pagination' :number-of-pages="5" :link-gen="linkGen" v-model="currentPage"></b-pagination-nav>
   </v-content>
   <v-btn dark  @click="AddContents({name:'AddBoard', params: {stateBoard:'Add'}})">Add</v-btn>
@@ -44,9 +44,10 @@ export default {
       }
       this.$router.push(route)
     },
-    rowClick_test (record, index) {
-      console.log('record : ', record)
-      console.log('index : ', index)
+    // event handler when table rowcliked
+    rowClick (record, index) {
+      var routerData = {name: 'ViewContent', params: {boardId: this.board_name, stateBoard: 'View', index: record.INDEX}}
+      this.$router.push(routerData)
     },
     linkGen (pageNum) {
       return '/' + this.baseurl + '/' + pageNum
