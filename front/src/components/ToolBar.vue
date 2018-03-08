@@ -5,10 +5,10 @@
       <v-toolbar-side-icon @click.stop="drawerLeft = !drawerLeft"></v-toolbar-side-icon>
       <v-toolbar-title class="white--text">Title</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="test('google')" flat>dfdfd</v-btn>
-      <v-btn v-if="!$store.state.isUserLoggedin" @click="FBlogin" flat >facebook</v-btn>
-      <v-btn v-if="!$store.state.isUserLoggedin" flat  @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
-      <v-btn v-if="!$store.state.isUserLoggedin" flat  @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" flat @click="socialLogin('google')">google</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" flat @click="socialLogin('facebook')">facebook</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" flat @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" flat @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
       <v-btn v-if="$store.state.isUserLoggedin"  flat @click="logout">logout</v-btn>
       <v-btn icon @click.stop="drawerRight =!drawerRight"><v-icon>exit_to_app</v-icon></v-btn>
     </v-toolbar>
@@ -139,13 +139,15 @@ export default {
     }
   },
   methods: {
-    test (provider) {
+    socialLogin (provider) {
       this.response = null
       var this_ = this
       this.$auth.authenticate(provider).then(function (authResponse) {
         if (provider === 'google') {
           axios.get('https://www.googleapis.com/plus/v1/people/me/openIdConnect').then(function (response) {
             this_.response = response
+            this_.$store.dispatch('setUser', this_.response.data)
+            this_.$store.dispatch('setToken', this_.response.config.headers)
           })
         }
       })
@@ -186,14 +188,6 @@ export default {
         this.password = ''
         this.msg = response.data.msg
       }
-    },
-    FBlogin () {
-      // this.$auth.authenticate('google').then(function () {
-      //   console.log('success!')
-      // })
-      // const response = await AuthenticationService.face_signin()
-      // console.log(response)
-      console.log('click')
     },
     logout () {
       this.$store.dispatch('setToken', null)

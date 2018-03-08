@@ -53,7 +53,6 @@ function googleAuth(req, res) {
             'content-type': 'application/x-www-form-urlencoded'
         }
     }, function(err, response, body) {
-        console.log('2')
         try {
             if(!err && response.statusCode ==200){
                 var responseJson = JSON.parse(body)
