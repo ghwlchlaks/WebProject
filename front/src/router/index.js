@@ -47,6 +47,11 @@ export default new Router({
       path: '/:boardId/:stateBoard/:index',
       name: 'ViewContent',
       component: ViewContent
+    },
+    {
+      path: '/auth/callback',
+      name: 'callback',
+      component: ViewContent
     }
   ]
 })

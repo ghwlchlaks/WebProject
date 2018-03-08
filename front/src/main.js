@@ -8,12 +8,24 @@ import 'vuetify/dist/vuetify.min.css'
 import store from '../store/store'
 import {sync} from 'vuex-router-sync'
 import BootstrapVue from 'bootstrap-vue'
+import VueAxios from 'vue-axios'
+import axios from 'axios'
+import VueAuthenticate from 'vue-authenticate'
 
+Vue.use(VueAxios, axios)
+Vue.use(VueAuthenticate, {
+  baseUrl: 'http://localhost:8082',
+  providers: {
+    google: {
+      clientId: '373179483442-a134eajj5vhh5dbil9hi0l951vhm15kb.apps.googleusercontent.com',
+      redirectUri: 'http://localhost:8080/auth/callback'
+    }
+  }
+})
 Vue.use(Vuetify)
 Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
-
 sync(store, router)
 
 /* eslint-disable no-new */

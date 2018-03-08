@@ -1,10 +1,10 @@
 var FBUser = require('../models/user').FBUser
-var fbConfig = require('../config/fbConfig')
+var fbConfig = require('../config/socialConfig').facebook
 var FacebookStrategy = require('passport-facebook')
 
 module.exports = function (passport) {
     passport.use(new FacebookStrategy({
-        clientID: fbConfig.clientID,
+        clientID: fbConfig.clientId,
         clientSecret: fbConfig.clientSecret,
         callbackURL: fbConfig.callbackURL,
         profileFields: fbConfig.profileFields

@@ -5,6 +5,8 @@
       <v-toolbar-side-icon @click.stop="drawerLeft = !drawerLeft"></v-toolbar-side-icon>
       <v-toolbar-title class="white--text">Title</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn @click="test('google')" flat>dfdfd</v-btn>
+      <v-btn v-if="!$store.state.isUserLoggedin" @click="FBlogin" flat >facebook</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat  @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
       <v-btn v-if="!$store.state.isUserLoggedin" flat  @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
       <v-btn v-if="$store.state.isUserLoggedin"  flat @click="logout">logout</v-btn>
@@ -70,9 +72,9 @@
   </v-footer>
   </v-app>
 </template>
-
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
+import axios from 'axios'
 export default {
   data () {
     return {
@@ -89,6 +91,8 @@ export default {
       drawerRight: false,
       isSignup: false,
       isSignin: false,
+      gapi: null,
+      auth2: null,
       items: [
         {
           action: 'videogame_asset',
@@ -135,6 +139,17 @@ export default {
     }
   },
   methods: {
+    test (provider) {
+      this.response = null
+      var this_ = this
+      this.$auth.authenticate(provider).then(function (authResponse) {
+        if (provider === 'google') {
+          axios.get('https://www.googleapis.com/plus/v1/people/me/openIdConnect').then(function (response) {
+            this_.response = response
+          })
+        }
+      })
+    },
     async local_signup () {
       const response = await AuthenticationService.local_signup({
         email: this.email,
@@ -171,6 +186,14 @@ export default {
         this.password = ''
         this.msg = response.data.msg
       }
+    },
+    FBlogin () {
+      // this.$auth.authenticate('google').then(function () {
+      //   console.log('success!')
+      // })
+      // const response = await AuthenticationService.face_signin()
+      // console.log(response)
+      console.log('click')
     },
     logout () {
       this.$store.dispatch('setToken', null)
