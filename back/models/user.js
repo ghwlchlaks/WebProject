@@ -51,7 +51,7 @@ var GoogleserSchema = new Schema({
     token: { type: String, required: true },
     username : {type: String},
     gender : {type:String},
-    provider : {type:String},
+    provider : {type:String}
 })
 var LocalUser = mongoose.model('LocalUser', LocalUserSchema)
 var GoogleUser = mongoose.model('GoogleUser', GoogleserSchema)

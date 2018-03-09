@@ -7,7 +7,7 @@ export default {
   local_signin (credentials) {
     return Api().post('local_signin', credentials)
   },
-  face_signin () {
-    return Api().get('/facebook')
+  social_login (credentials, socialName) {
+    return Api().post(`/social_login/${socialName}`, credentials)
   }
 }

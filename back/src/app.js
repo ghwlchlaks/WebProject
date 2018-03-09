@@ -29,7 +29,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
-require('../policies/FBAuthenticationManager')(passport)
+//require('../policies/FBAuthenticationManager')(passport)
 // require('../policies/GoogleauthenticationManager')(passport)
 app.use(passport.initialize())
 app.use(passport.session())
@@ -49,9 +49,8 @@ app.get('/profile', index)
 // app.post('/:boardId/:stateBoard', index)
 // app.get('/:boardId/:stateBoard/:index', index)
 
-// app.post('/auth/:provider', index)
-
 app.post('/auth/:provider',index)
+app.post('/social_login/:socialName',index)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
