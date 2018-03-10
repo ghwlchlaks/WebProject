@@ -6,60 +6,71 @@ const config = require('../config/database')
 const socialConfig = require('../config/socialConfig')
 
 module.exports = {
-   checkedValidation (req, res) {
-    switch (req.params.provider) {
-        case 'google':
-            googleAuth(req, res)
-            break
+    checkedValidation(req, res) {
+        switch (req.params.provider) {
+            case 'google':
+                googleAuth(req, res)
+                break
+        }
+    },
+    //클라이언트에서 jwt token을 보낸것을 체크
+    checkedJWT(req, res) {
+
     }
-   },
-   //클라이언트에서 jwt token을 보낸것을 체크
-   checkedJWT (req, res) {
-       
-   }
 }
 // user profile db에 데이터가 있는지 확인, 저장 및 갱신
-function userSaveOrCheck( res , data, provider) {
+function userSaveOrCheck(res,access_token, data, provider) {
+    var dataJson= JSON.parse(data)
     var User = null
     var email = null
     var name = null
     var gender = null
     var socialId = null
     var accessToken = null
-    if(provider == 'google') { 
+
+    if (provider == 'google') {
         User = GoogleUser
-        email = data.emails[0].value
-        name = data.displayName
-        gender = data.gender
-        socialId = data.id
-        accessToken = res.req.headers.authorization
+        email = dataJson.emails[0].value
+        name = dataJson.displayName
+        gender = dataJson.gender
+        socialId = dataJson.id
+        //accessToken = res.req.headers.authorization
+        accessToken = access_token
     }
-    
-    User.findOne({ 'email' : email},function(err,result){
-         if (err) res.status(500).send({ success: false, message: 'an error has accured tring to find the social data' })
-         if (!result) {
-             newUser = new User()
-             newUser.email = email
-             newUser.gender = gender
-             newUser.name = name
-             newUser.provider = provider
-             newUser.socialId = socialId
-             newUser.accessToken = accessToken
-             newUser.jwtToken = jwt.sign({newUser}, config.local_secret)   
-             newUser.save(function(err) {
-                 if(err) res.status(500).send({succss:false, message: 'an error has accured trting to save the social data '})
-                 res.send({success: true, user:newUser})
-             })
-         }
-         else {
-             console.log('before accesstoken ', result.accessToken)
-             result.accessToken = accessToken
-             result.save(function(err) {
-                 console.log(result)
-                 if(err) res.status(500).send({succss:false, message: 'an error has accured trting to update the social data '})
-                 res.json({success: true,user:result})
-             })
-         }
+
+    User.findOne({ 'email': email }, function (err, result) {
+        if (err) res.status(500).send({ success: false, message: 'an error has accured tring to find the social data' })
+        if (!result) {
+            newUser = new User()
+            newUser.email = email
+            newUser.gender = gender
+            newUser.name = name
+            newUser.provider = provider
+            newUser.socialId = socialId
+            newUser.accessToken = accessToken
+            newUser.jwtToken = jwt.sign({ newUser }, config.local_secret)
+            newUser.save(function (err) {
+                if (err) {
+                    res.status(500).send({ succss: false, message: 'an error has accured trting to save the social data ' })
+                }
+                else {
+                    res.send({ success: true, user: newUser })
+                }
+            })
+        }
+        else {
+            // console.log('before accesstoken ', result.accessToken)
+            result.accessToken = accessToken
+            result.save(function (err) {
+                // console.log(result)
+                if (err) {
+                    res.status(500).send({ succss: false, message: 'an error has accured trting to update the social data ' })
+                }
+                else {
+                    res.send({ success: true, user: result })
+                }
+            })
+        }
     })
 }
 
@@ -80,13 +91,11 @@ function googleAuth(req, res) {
             'content-type': 'application/x-www-form-urlencoded'
         }
         // token response 4
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         try {
-            if(!err && response.statusCode ==200){
+            if (!err && response.statusCode == 200) {
                 var responseJson = JSON.parse(body)
-                //console.log(responseJson)
-                googleGetProfile(req,res,responseJson)
-                //res.json(responseJson)
+                googleGetProfile(req, res, responseJson)
             }
             else {
                 res.status(response.statusCode).json(err)
@@ -98,25 +107,25 @@ function googleAuth(req, res) {
     })
 }
 //5google get user profile using accesstoken
-function googleGetProfile(req,res,responseJson) {
+function googleGetProfile(req, res, responseJson) {
     var access_token = responseJson.access_token
     Request({
-        method :"get",
-        url : `https://www.googleapis.com/plus/v1/people/me?access_token=${access_token}`
-    }, function(err, response, body){
-        try{
-            if(!err && response.statusCode==200){
+        method: "get",
+        url: `https://www.googleapis.com/plus/v1/people/me?access_token=${access_token}`
+    }, function (err, response, body) {
+        try {
+            if (!err && response.statusCode == 200) {
                 //google user profile save
-                var responseJson = JSON.parse(body)
-                userSaveOrCheck(res, responseJson, 'google')
-            }   
+                userSaveOrCheck(res,access_token, body, 'google')
+            }
             else {
                 res.status(response.statusCode).json(err)
             }
-      
+
         }
-        catch(e){
+        catch (e) {
             res.status(500).json(err || e)
         }
     }
-)}
+    )
+}
