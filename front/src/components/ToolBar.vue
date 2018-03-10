@@ -74,7 +74,7 @@
 </template>
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data () {
     return {
@@ -87,6 +87,7 @@ export default {
       sex: '',
       success: '',
       msg: '',
+      data: '',
       drawerLeft: false,
       drawerRight: false,
       isSignup: false,
@@ -138,20 +139,24 @@ export default {
     }
   },
   methods: {
-    socialLogin (provider) {
+    async socialLogin (provider) {
       this.res = null
       var this_ = this
+      var data = null
       // request token 1 -> authentication code 서버로 전달 2
-      this_.$auth.authenticate(provider).then(function (authResponse) {
-        if (provider === 'google') {
-          // Use token to call google api
-          axios.get('https://www.googleapis.com/plus/v1/people/me/openIdConnect').then(function (res) {
-            this_.res = res
-            const response = AuthenticationService.social_login(this_.res, provider)
-            console.log(response['[[PromiseValue]]'])
-          })
+      await this_.$auth.authenticate(provider).then(function (authResponse) {
+        if (authResponse.data.success === true) {
+          data = authResponse.data.user
         }
       })
+      if (data !== null) {
+        this.$store.dispatch('setUser', data)
+        this.$store.dispatch('setToken', data.jwtToken)
+      } else {
+        this.$store.dispatch('setUser', null)
+        this.$store.dispatch('setToken', null)
+        this.$router.push('/')
+      }
     },
     async local_signup () {
       const response = await AuthenticationService.local_signup({

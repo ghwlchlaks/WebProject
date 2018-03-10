@@ -3,10 +3,12 @@ const router = express.Router()
 const passport = require('passport')
 
 // reference files
+//authentication
 const AuthenticationPolicy = require('../policies/AuthenticationPolicy')
 const AuthenticationJwtManager = require('../policies/AuthenticationJwtManager')
-const NoticeBoarderController = require('../policies/NoticeBoarderController')
 const SocialAuthenticationManager = require('../policies/SocialAuthenticationManager')
+//board
+const NoticeBoarderController = require('../policies/NoticeBoarderController')
 
 router.post('/local_signup', AuthenticationPolicy.signup, AuthenticationJwtManager.JwtTokenCreate)
 router.post('/local_signin', AuthenticationJwtManager.JwtTokenGive, function (req, res) {
@@ -21,8 +23,6 @@ router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, re
 // router.get('/:boardId/:stateBoard/:index', NoticeBoarderController.showContent)
 
 router.post('/auth/:provider', SocialAuthenticationManager.checkedValidation)
-router.post('/social_login/:socialName',SocialAuthenticationManager.userSaveOrCheck)
-
 
 module.exports = router
 

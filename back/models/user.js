@@ -46,12 +46,15 @@ LocalUserSchema.methods.comparePassword = function (passw, cb) {
         cb(null, isMatch)
     })
 }
+
 var GoogleserSchema = new Schema({
-    social_id: { type: String, unique: true, required: true, lowercase:true},
-    token: { type: String, required: true },
-    username : {type: String},
+    email: { type: String, unique: true, required: true, lowercase:true},
+    accessToken: { type: String, required: true },
+    name : {type: String},
     gender : {type:String},
-    provider : {type:String}
+    socialId : {type:String},
+    provider : {type:String},
+    jwtToken : {type:String}
 })
 var LocalUser = mongoose.model('LocalUser', LocalUserSchema)
 var GoogleUser = mongoose.model('GoogleUser', GoogleserSchema)

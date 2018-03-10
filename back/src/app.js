@@ -50,7 +50,6 @@ app.get('/profile', index)
 // app.get('/:boardId/:stateBoard/:index', index)
 
 app.post('/auth/:provider',index)
-app.post('/social_login/:socialName',index)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
