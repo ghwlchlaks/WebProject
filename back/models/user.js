@@ -47,7 +47,16 @@ LocalUserSchema.methods.comparePassword = function (passw, cb) {
     })
 }
 
-var GoogleserSchema = new Schema({
+var GoogleUserSchema = new Schema({
+    email: { type: String, unique: true, required: true, lowercase:true},
+    accessToken: { type: String, required: true },
+    name : {type: String},
+    gender : {type:String},
+    socialId : {type:String},
+    provider : {type:String},
+    jwtToken : {type:String}
+})
+var FacebookUserSchema = new Schema({
     email: { type: String, unique: true, required: true, lowercase:true},
     accessToken: { type: String, required: true },
     name : {type: String},
@@ -57,11 +66,13 @@ var GoogleserSchema = new Schema({
     jwtToken : {type:String}
 })
 var LocalUser = mongoose.model('LocalUser', LocalUserSchema)
-var GoogleUser = mongoose.model('GoogleUser', GoogleserSchema)
+var GoogleUser = mongoose.model('GoogleUser', GoogleUserSchema)
+var FacebookUser = mongoose.model('FacebookUser', FacebookUserSchema)
 
 module.exports = {
     LocalUser : LocalUser,
-    GoogleUser : GoogleUser
+    GoogleUser : GoogleUser,
+    FacebookUser : FacebookUser
 }
 
 
