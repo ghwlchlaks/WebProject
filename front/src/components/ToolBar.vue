@@ -145,6 +145,11 @@ export default {
       var data = null
       // request token 1 -> authentication code 서버로 전달 2
       await this_.$auth.authenticate(provider).then(function (authResponse) {
+        if (provider === 'facebook') {
+          console.log('facebook api called block')
+        } else if (provider === 'google') {
+          console.log('google api called block')
+        }
         if (authResponse.data.success === true) {
           data = authResponse.data.user
         }

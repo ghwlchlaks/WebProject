@@ -3,12 +3,14 @@ import Vuex from 'vuex'
 import VueAxios from 'vue-axios'
 import VueAuthenticate from 'vue-authenticate'
 import axios from 'axios'
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(VueAxios, axios)
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     strict: true,
+    plugins: [createPersistedState()],
     state: {
         token: null,
         user: null,

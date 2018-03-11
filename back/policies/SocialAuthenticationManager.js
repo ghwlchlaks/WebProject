@@ -11,12 +11,67 @@ module.exports = {
             case 'google':
                 googleAuth(req, res)
                 break
+            case 'facebook':
+                facebookAuth(req, res)
+                break
         }
     },
     //클라이언트에서 jwt token을 보낸것을 체크
     checkedJWT(req, res) {
 
     }
+}
+
+function facebookAuth(req, res) {
+    Request({
+        method: 'post',
+        url: 'https://graph.facebook.com/v2.4/oauth/access_token',
+        form: {
+            client_id: socialConfig.facebook.clientId,
+            client_secret: socialConfig.facebook.clientSecret,
+            code: req.body.code,
+            redirect_uri: req.body.redirectUri
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }, function (err, response, body) {
+        try {
+            if (!err && response.statusCode == 200) {
+                var responseJson = JSON.parse(body)
+                console.log(responseJson)
+                // res.send(responseJson)
+                facebookGetProfile(req, res, responseJson)
+            }
+            else {
+                res.status(response.statusCode).json(err)
+            }
+        }
+        catch (e) {
+            res.status(500).json(err || e)
+        }
+    })
+}
+function facebookGetProfile(req, res, responseJson) {
+    Request({
+        method: 'get',
+        url: '',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }, function(err, response, body){
+        try {
+            if(!err && response.statusCode ==200 ){
+                userSaveOrCheck(res, body, 'facebook')
+            }
+            else {
+                res.status(response.statusCode).json(err)
+            }
+        }
+        catch(e) {
+            res.status(500).json(err || e)
+        }
+    })
 }
 // user profile db에 데이터가 있는지 확인, 저장 및 갱신
 function userSaveOrCheck(res, data, provider) {
@@ -112,10 +167,7 @@ function googleGetProfile(req, res, responseJson) {
     var access_token = responseJson.access_token
     Request({
         method: "get",
-        url: `https://www.googleapis.com/plus/v1/people/me?access_token=${access_token}`,
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded'
-        }
+        url: `https://www.googleapis.com/plus/v1/people/me?access_token=${access_token}`   
     }, function (err, response, body) {
         try {
             if (!err && response.statusCode == 200) {
@@ -125,7 +177,6 @@ function googleGetProfile(req, res, responseJson) {
             else {
                 res.status(response.statusCode).json(err)
             }
-
         }
         catch (e) {
             res.status(500).json(err || e)
