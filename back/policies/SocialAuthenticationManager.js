@@ -19,7 +19,7 @@ module.exports = {
     }
 }
 // user profile db에 데이터가 있는지 확인, 저장 및 갱신
-function userSaveOrCheck(res,access_token, data, provider) {
+function userSaveOrCheck(res, data, provider) {
     var dataJson= JSON.parse(data)
     var User = null
     var email = null
@@ -34,8 +34,8 @@ function userSaveOrCheck(res,access_token, data, provider) {
         name = dataJson.displayName
         gender = dataJson.gender
         socialId = dataJson.id
-        //accessToken = res.req.headers.authorization
-        accessToken = access_token
+        accessToken = res.req.headers.authorization
+        //accessToken = access_token
     }
 
     User.findOne({ 'email': email }, function (err, result) {
@@ -95,7 +95,8 @@ function googleAuth(req, res) {
         try {
             if (!err && response.statusCode == 200) {
                 var responseJson = JSON.parse(body)
-                googleGetProfile(req, res, responseJson)
+                 googleGetProfile(req, res, responseJson)
+                
             }
             else {
                 res.status(response.statusCode).json(err)
@@ -111,12 +112,15 @@ function googleGetProfile(req, res, responseJson) {
     var access_token = responseJson.access_token
     Request({
         method: "get",
-        url: `https://www.googleapis.com/plus/v1/people/me?access_token=${access_token}`
+        url: `https://www.googleapis.com/plus/v1/people/me?access_token=${access_token}`,
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
     }, function (err, response, body) {
         try {
             if (!err && response.statusCode == 200) {
                 //google user profile save
-                userSaveOrCheck(res,access_token, body, 'google')
+                userSaveOrCheck(res, body, 'google')
             }
             else {
                 res.status(response.statusCode).json(err)

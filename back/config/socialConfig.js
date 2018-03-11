@@ -6,7 +6,7 @@ module.exports = {
     profileFields : ['id','displayName','email']
   },
   google : {
-    clientId : '373179483442-a134eajj5vhh5dbil9hi0l951vhm15kb.apps.googleusercontent.com',
-    clientSecret : 'M77IM4HiSnmN07obbDe1DG_p'
+    clientId : '373179483442-qdu2so3q9u38es1r9o93n920ds01p3dg.apps.googleusercontent.com',
+    clientSecret : 'uTetykgQlY56RJG910ZSpZIH'
   }
 }
