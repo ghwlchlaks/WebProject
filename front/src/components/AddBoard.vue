@@ -1,10 +1,12 @@
 <template>
 <v-app>
-  <v-text-field label="title" v-model="saveData.title"></v-text-field>
-  <br>
-  <v-text-field label="content" v-model="saveData.content"></v-text-field>
-  <br>
-  <v-btn dark  @click="SaveContents">save</v-btn>
+  <v-content class='content'>
+    <v-text-field label="title" v-model="saveData.title"></v-text-field>
+    <br>
+    <v-text-field label="content" v-model="saveData.content"></v-text-field>
+    <br>
+    <v-btn dark  @click="SaveContents">save</v-btn>
+  </v-content>
 </v-app>
 </template>
 <script>
@@ -30,9 +32,13 @@ export default {
   },
   methods: {
     async SaveContents () {
-      console.log(this.saveData)
       const responsedata = await NoticeBoardService.add(this.boardId, this.stateBoard, this.saveData)
-      console.log(responsedata)
+      if (responsedata.data.success === true) {
+        alert('게시물이 등록 되었습니다.')
+      } else {
+        alert('게시물 등록에 실패하였습니다.')
+      }
+      this.$router.push(`/board/${this.boardId}/1`)
     }
   }
 }

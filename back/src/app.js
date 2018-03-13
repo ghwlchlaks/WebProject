@@ -28,12 +28,9 @@ app.set('view engine', 'ejs')
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, 'public')))
-//require('../policies/FBAuthenticationManager')(passport)
-// require('../policies/GoogleauthenticationManager')(passport)
+app.use(express.static(path.join(__dirname, '../public')))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(bodyParser.json())
 app.use(cors())
 
 app.get('/', function(req,res){
@@ -42,14 +39,13 @@ app.get('/', function(req,res){
 // route login page
 app.post('/local_signup', index)
 app.post('/local_signin', index)
+app.post('/auth/:provider',index)
 
 app.get('/profile', index)
 
-// app.get('/:boardId/:index', index)
-// app.post('/:boardId/:stateBoard', index)
-// app.get('/:boardId/:stateBoard/:index', index)
-
-app.post('/auth/:provider',index)
+app.get('/board/:boardId/:index', index)
+app.post('/board/:boardId/:stateBoard', index)
+app.get('/board/:boardId/:stateBoard/:index', index)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

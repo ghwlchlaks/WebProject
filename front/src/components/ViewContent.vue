@@ -36,9 +36,9 @@ export default {
       this.stateBoard = this.$store.state.route.params.stateBoard
       this.index = this.$store.state.route.params.index
       const response = await NoticeBoardService.contentView(this.boardId, this.stateBoard, this.index)
-      console.log(response)
+      // console.log(response)
       this.viewData = response.data
-      console.log(this.viewData)
+      // console.log(this.viewData)
     }
   }
 }

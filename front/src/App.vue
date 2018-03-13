@@ -12,4 +12,7 @@ export default {
 }
 </script>
 <style>
+.content {
+  margin: 1%;
+}
 </style>

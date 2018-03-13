@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs')
 var Schema = mongoose.Schema
 
+//local user model
 var LocalUserSchema = new Schema({
     email: { type: String, unique: true, required: true, lowercase: true },
     password: { type: String, required: true },
@@ -47,6 +48,7 @@ LocalUserSchema.methods.comparePassword = function (passw, cb) {
     })
 }
 
+//social user model
 var GoogleUserSchema = new Schema({
     email: { type: String, unique: true, required: true, lowercase:true},
     accessToken: { type: String, required: true },
@@ -74,18 +76,3 @@ module.exports = {
     GoogleUser : GoogleUser,
     FacebookUser : FacebookUser
 }
-
-
-// var FBUserSchema = new Schema({
-//     fb_id: { type: String, unique: true, required: true, lowercase:true},
-//     email: {type:String},
-//     token: { type: String, required: true },
-//     username : {type: String},
-//     country :  {type: String},
-//     wantedLanguage: {type: String},
-//     nickName:{type:String},
-//     sex: {type:String},
-//     role:{type:String, role_list: ['Client','Manager', 'Admin'],default: 'Client'},
-//     provider: {type:String}
-// })
-// var FBUser = mongoose.model('FBUser', FBUserSchema)
