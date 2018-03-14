@@ -28,7 +28,6 @@ Vue.use(VueAuthenticate, {
 })
 Vue.use(Vuetify)
 Vue.use(BootstrapVue)
-
 Vue.config.productionTip = false
 sync(store, router)
 

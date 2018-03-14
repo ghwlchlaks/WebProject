@@ -12,7 +12,7 @@ export default {
 }
 </script>
 <style>
-.content {
-  margin: 1%;
+* {
+  font-family: 'Open Sans', sans-serif;
 }
 </style>

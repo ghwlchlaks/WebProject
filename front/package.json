@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "bootstrap-social": "^5.1.1",
     "bootstrap-vue": "^2.0.0-rc.1",
     "npm": "^5.7.1",
     "v-infinite-scroll": "^1.0.4",
