@@ -11,6 +11,8 @@ import BootstrapVue from 'bootstrap-vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 import VueAuthenticate from 'vue-authenticate'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueAuthenticate, {

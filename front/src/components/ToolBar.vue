@@ -60,17 +60,9 @@
       </v-card>
     </v-dialog>
      <!-- signin dialog-->
-    <v-dialog v-model="isSignin" max-width="500px">
+    <v-dialog v-model="isSignin" max-width="400px">
       <v-card>
-        <v-card-text>
-          <v-text-field type="email" name="email" v-model="email" placeholder="email" />
-          <v-text-field type="password" name="password" v-model="password" placeholder="password" />
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click="local_signin">Login</v-btn><br />
-        </v-card-actions>
-        <button class="loginBtn loginBtn--facebook">Login with Facebook</button><br />
-        <button class="loginBtn loginBtn--google">Login with Google</button><br />
+        <login-form />
       </v-card>
     </v-dialog>
     <v-footer class="pa-3" app clipped>
@@ -80,6 +72,7 @@
 </template>
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
+import LoginForm from './LoginForm.vue'
 // import axios from 'axios'
 export default {
   data () {
@@ -222,7 +215,8 @@ export default {
   },
   props: {
     source: String
-  }
+  },
+  components: {LoginForm}
 }
 </script>
 <style scoped>
