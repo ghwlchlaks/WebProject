@@ -12,9 +12,12 @@ export default new Vuex.Store({
     strict: true,
     plugins: [createPersistedState()],
     state: {
+        // user login
         token: null,
         user: null,
-        isUserLoggedin: false
+        isUserLoggedin: false,
+        // signup modal
+        isSignUp: false
     },
     mutations: {
         setToken(state,token){
@@ -27,6 +30,9 @@ export default new Vuex.Store({
         },
         setUser(state, user){
             state.user = user
+        },
+        setSignUp(state, isSignUp) {
+            state.isSignUp = isSignUp
         }
     },
     actions: {
@@ -35,6 +41,9 @@ export default new Vuex.Store({
         },
         setUser({commit}, user){
             commit('setUser',user)
+        },
+        setSignUp({commit}, isSignUp) {
+            commit('setSignUp', isSignUp)
         }
     }
 })

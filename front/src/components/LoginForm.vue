@@ -1,68 +1,114 @@
 <template>
-<div class="container" id="loginForm">
+  <div class="container" id="loginForm">
     <div class="omb_login">
-    	<h3 class="omb_authTitle">Login or <a href="#">Sign up</a></h3>
-		<div class="row omb_row-sm-offset-1 omb_socialButtons">
+    	<h3 class="omb_authTitle">Login</h3>
+		    <div class="row omb_row-sm-offset-1 omb_socialButtons">
     	    
-		        <a href="#" class="btn btn-lg btn-block omb_btn-facebook">
+		        <a @click="socialLogin('facebook')" class="btn btn-lg btn-block omb_btn-facebook">
 			        <i class="fa fa-facebook visible-xs"></i>
 			        <span class="hidden-xs">Facebook</span>
 		        </a>
-	       
- 
-		        <a href="#" class="btn btn-lg btn-block omb_btn-twitter">
+		        <a @click="socialLogin('twitter')" class="btn btn-lg btn-block omb_btn-twitter">
 			        <i class="fa fa-twitter visible-xs"></i>
-			        <span class="hidden-xs">Twitter</span>
+			        <span class="hidden-xs">twitter</span>
 		        </a>
-	 
-        	
-		        <a href="#" class="btn btn-lg btn-block omb_btn-google">
+		        <a @click="socialLogin('google')" class="btn btn-lg btn-block omb_btn-google">
 			        <i class="fa fa-google-plus visible-xs"></i>
 			        <span class="hidden-xs">Google+</span>
 		        </a>
-	     
-		</div>
+	     	</div>
+      <div class="row omb_row-sm-offset-2 omb_loginOr">
+			  <div class="col-sm-12">
+				  <hr class="omb_hrOr">
+				    <span class="omb_spanOr">or</span>
+			  </div>
+		  </div>
 
-		<div class="row omb_row-sm-offset-2 omb_loginOr">
-			<div class="col-sm-12">
-				<hr class="omb_hrOr">
-				<span class="omb_spanOr">or</span>
-			</div>
-		</div>
-
-		<div class="row omb_row-sm-offset-2">
-			<div class="col-sm-12">	
-			    <form class="omb_loginForm" action="" autocomplete="off" method="POST">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-user"></i></span>
-						<input type="text" class="form-control" name="username" placeholder="email address">
-					</div>
-					<span class="help-block"></span>
+		  <div class="row omb_row-sm-offset-2">
+			  <div class="col-sm-12">	
+			    <form class="omb_loginForm">
+					  <div class="input-group">
+						  <span class="input-group-addon"><i class="fa fa-user"></i></span>
+						  <input type="text" v-model="email" class="form-control" name="username" placeholder="email address">
+					  </div>
+					  <span class="help-block"></span>
 										
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-						<input type="password" class="form-control" name="password" placeholder="Password">
-					</div>
-          <div id="loginBtn">
-					<button class="btn-lg btn-success btn-block" type="submit">Login</button>
-          </div>
-				</form>
-			</div>
+					  <div class="input-group">
+						  <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+						  <input type="password" v-model="password" class="form-control" name="password" placeholder="Password">
+					  </div>
+            <div id="loginBtn">
+					    <button class="btn-lg btn-success btn-block" @click="local_signIn()">Login</button>
+            </div>
+				  </form>
+			  </div>
     	</div>
-		<div class="row omb_row-sm-offset-3">
-			<div class="col-xs-12 col-sm-5">
-				<p class="omb_forgotPwd">
-					<a href="#">Forgot password?</a>
-				</p>
-			</div>
-		</div>	    	
-	</div>
-        </div>
+		  <div class="row omb_row-sm-offset-3">
+			  <div class="col-xs-12 col-sm-5">
+				  <p class="omb_forgotPwd">
+					  <a href="#">Forgot password?</a>
+				  </p>
+			  </div>
+		  </div>	    	
+	  </div>
+  </div>
 </template>
 <script>
+import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
     return {
+      email: null,
+      password: null,
+      res: null,
+      success: null,
+      msg: null
+    }
+  },
+  methods: {
+    async local_signIn () {
+      const response = await AuthenticationService.local_signin({
+        email: this.email,
+        password: this.password
+      })
+      this.$store.dispatch('setToken', response.data.token)
+      this.$store.dispatch('setUser', response.data.user.local)
+      console.log(response)
+      this.success = response.data.success
+      if (this.success) {
+        this.msg = response.data.token
+        this.isSignin = false
+      } else {
+        this.$router.push('/')
+        this.username = ''
+        this.password = ''
+        this.msg = response.data.msg
+      }
+    },
+    async socialLogin (provider) {
+      this.res = null
+      var this_ = this
+      var data = null
+      // request token 1 -> authentication code 서버로 전달 2
+      await this_.$auth.authenticate(provider).then(function (authResponse) {
+        if (provider === 'google') {
+          console.log('google api called block')
+        } else if (provider === 'facebook') {
+          console.log('facebook api called block')
+        }
+        if (authResponse.data.success === true) {
+          data = authResponse.data.user
+        }
+      })
+      if (data !== null) {
+        this.$store.dispatch('setUser', data)
+        this.$store.dispatch('setToken', data.jwtToken)
+      } else {
+        this.$store.dispatch('setUser', null)
+        this.$store.dispatch('setToken', null)
+        this.$router.push('/')
+      }
+      window.location.reload()
     }
   }
 }

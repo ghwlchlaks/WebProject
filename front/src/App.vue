@@ -15,4 +15,8 @@ export default {
 * {
   font-family: 'Open Sans', sans-serif;
 }
+/* signup - sexRadio group - margin-right setting */
+.custom-control-label{
+  margin-right:15px
+}
 </style>

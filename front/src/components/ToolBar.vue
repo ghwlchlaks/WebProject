@@ -8,8 +8,8 @@
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn color="grey darken-3" v-if="!$store.state.isUserLoggedin" flat @click="socialLogin('google')">google</v-btn>
-        <v-btn color="grey darken-3" v-if="!$store.state.isUserLoggedin" flat @click="socialLogin('facebook')">facebook</v-btn>
+        <!-- <v-btn color="grey darken-3" v-if="!$store.state.isUserLoggedin" flat @click="socialLogin('google')">google</v-btn>
+        <v-btn color="grey darken-3" v-if="!$store.state.isUserLoggedin" flat @click="socialLogin('facebook')">facebook</v-btn> -->
         <v-btn color="grey darken-3" v-if="!$store.state.isUserLoggedin" flat @click.native.stop="isSignup=!isSignup">SignUp</v-btn>
         <v-btn color="grey darken-3" v-if="!$store.state.isUserLoggedin" flat @click.native.stop="isSignin=!isSignin">SignIn</v-btn>
         <v-btn color="grey darken-3" v-if="$store.state.isUserLoggedin"  flat @click="logout">logout</v-btn>
@@ -43,20 +43,9 @@
         </v-list>
     </v-navigation-drawer>
     <!--signup dialog-->
-    <v-dialog v-model="isSignup" max-width="500px">
+    <v-dialog v-model="isSignup" persistent max-width="700px">
       <v-card>
-      <v-card-text>
-        <v-text-field type="email" name="email" v-model="email" placeholder="email" />
-        <v-text-field type="password" name="password" v-model="password" placeholder="password" />
-        <v-text-field type="username" name="username" v-model="username" placeholder="username" />
-        <v-text-field type="country" name="country" v-model="country" placeholder="country" />
-        <v-text-field type="wantedLanguage" name="wantedLanguage" v-model="wantedLanguage" placeholder="wantedLanguage" />
-        <v-text-field type="nickName" name="nickName" v-model="nickName" placeholder="nickName" />
-        <v-text-field type="sex" name="sex" v-model="sex" placeholder="sex" />
-      </v-card-text>
-        <v-card-actions>
-          <v-btn @click="local_signup">Register</v-btn>
-        </v-card-actions>
+        <sign-up-form />
       </v-card>
     </v-dialog>
      <!-- signin dialog-->
@@ -71,19 +60,12 @@
   </v-app>
 </template>
 <script>
-import AuthenticationService from '@/services/AuthenticationService'
 import LoginForm from './LoginForm.vue'
+import SignUpForm from './SignUpForm.vue'
 // import axios from 'axios'
 export default {
   data () {
     return {
-      email: '',
-      password: '',
-      username: '',
-      country: '',
-      wantedLanguage: '',
-      nickName: '',
-      sex: '',
       success: '',
       msg: '',
       data: '',
@@ -138,68 +120,6 @@ export default {
     }
   },
   methods: {
-    async socialLogin (provider) {
-      this.res = null
-      var this_ = this
-      var data = null
-      // request token 1 -> authentication code 서버로 전달 2
-      await this_.$auth.authenticate(provider).then(function (authResponse) {
-        if (provider === 'google') {
-          console.log('google api called block')
-        } else if (provider === 'facebook') {
-          console.log('facebook api called block')
-        }
-        if (authResponse.data.success === true) {
-          data = authResponse.data.user
-        }
-      })
-      if (data !== null) {
-        this.$store.dispatch('setUser', data)
-        this.$store.dispatch('setToken', data.jwtToken)
-      } else {
-        this.$store.dispatch('setUser', null)
-        this.$store.dispatch('setToken', null)
-        this.$router.push('/')
-      }
-    },
-    async local_signup () {
-      const response = await AuthenticationService.local_signup({
-        email: this.email,
-        password: this.password,
-        username: this.username,
-        country: this.country,
-        wantedLanguage: this.wantedLanguage,
-        nickName: this.nickName,
-        sex: this.sex
-      })
-      this.success = response.data.success
-      this.msg = response.data.message
-      if (this.success) {
-        console.log('token! ', response.data.token)
-      } else {
-        this.msg = response.data.error
-        console.log('signup fail! ', this.msg)
-      }
-    },
-    async local_signin () {
-      const response = await AuthenticationService.local_signin({
-        email: this.email,
-        password: this.password
-      })
-      this.$store.dispatch('setToken', response.data.token)
-      this.$store.dispatch('setUser', response.data.user.local)
-      console.log(response)
-      this.success = response.data.success
-      if (this.success) {
-        this.msg = response.data.token
-        this.isSignin = false
-      } else {
-        this.$router.push('/')
-        this.username = ''
-        this.password = ''
-        this.msg = response.data.msg
-      }
-    },
     logout () {
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
@@ -216,7 +136,12 @@ export default {
   props: {
     source: String
   },
-  components: {LoginForm}
+  watch: {
+    '$store.state.isSignUp': function () {
+      this.isSignup = !this.isSignup
+    }
+  },
+  components: {LoginForm, SignUpForm}
 }
 </script>
 <style scoped>
