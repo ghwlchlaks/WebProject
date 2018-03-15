@@ -51,12 +51,13 @@ module.exports = {
             newUser.email = req.body.email        
             newUser.password = req.body.password
             newUser.username = req.body.username
-            newUser.country = req.body.country
-            newUser.wantedLanguage = req.body.wantedLanguage
-            newUser.nickName = req.body.nickName
+            // newUser.country = req.body.country
+            // newUser.wantedLanguage = req.body.wantedLanguage
+            // newUser.nickName = req.body.nickName
             newUser.sex = req.body.sex
             newUser.role = "Client"
             newUser.token = jwt.sign({newUser}, config.local_secret)           
+            newUser.provider = 'local'
             newUser.save(function (err) {
                 if(err) {
                     console.log(err)
