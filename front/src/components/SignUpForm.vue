@@ -9,6 +9,11 @@
       <v-stepper-step step="3">Login success</v-stepper-step>
     </v-stepper-header>
     <v-stepper-items>
+
+      <div>
+        <v-alert type='error' :value="alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
+      </div>
+
 <!--step 1 -->
       <v-stepper-content step="1">
         <form>
@@ -80,6 +85,7 @@ import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
     return {
+      alert: false,
       emailMessage: '',
       nameMessage: '',
       passwordMessage: '',
@@ -117,6 +123,10 @@ export default {
       }
     },
     modalCancel () {
+      this.emailMessage = ''
+      this.passwordMessage = ''
+      this.confirmPassMessage = ''
+      this.nameMessage = ''
       this.email = ''
       this.password = ''
       this.confirmPassword = ''
@@ -134,7 +144,8 @@ export default {
             this.e1 = 2
           } else {
             // error message output
-            console.log('error')
+            this.alert = true
+            setTimeout(this.triggerAlert, 1000 * 3)
           }
           break
         case 2:
@@ -147,13 +158,16 @@ export default {
           break
         default:
       }
+    },
+    triggerAlert () {
+      this.alert = false
     }
   },
   watch: {
     // user imformation validation checked
     email: function (val) {
       var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
-      if (val !== null && regex.test(val) === false) {
+      if (val !== '' && regex.test(val) === false) {
         this.emailMessage = 'email형식에 맞지 않습니다.'
       } else {
         this.emailMessage = ''
@@ -161,7 +175,7 @@ export default {
     },
     username: function (val) {
       var regex = /^[a-zA-Z]{2,10}[a-zA-Z]{2,10}$/
-      if (val !== null && regex.test(val) === false) {
+      if (val !== '' && regex.test(val) === false) {
         this.nameMessage = 'name형식에 맞지않습니다. 영문만 사용하여 2~10자이내'
       } else {
         this.nameMessage = ''
@@ -169,7 +183,7 @@ export default {
     },
     password: function (val) {
       var regex = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/
-      if (val !== null && regex.test(val) === false) {
+      if (val !== '' && regex.test(val) === false) {
         this.passwordMessage = 'password형식에 맞지않습니다. 영문 숫자를 혼합하여 6~20자 이내'
       } else {
         this.passwordMessage = ''
