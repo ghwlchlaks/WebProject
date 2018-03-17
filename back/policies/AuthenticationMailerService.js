@@ -7,7 +7,6 @@ module.exports = {
     services(req, res) {
         var state = req.params.state
         var rand = ''
-
         if (state == 'sendToEmail') {
             let email = req.body.email
             let condition_string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -47,7 +46,9 @@ module.exports = {
                         if (err) { console.log(err) 
                             res.send({success:false, msg:'temp user save failed'})
                         }
-                        else {res.send({ success: true, msg: "email send success" })}
+                        else {
+                            res.send({ success: true, msg: "email send success" })
+                        }
                     })
                 }
             })

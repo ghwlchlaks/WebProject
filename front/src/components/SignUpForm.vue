@@ -10,12 +10,13 @@
     </v-stepper-header>
     <v-stepper-items>
 
-      <div>
-        <v-alert type='error' :value="alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
-      </div>
+     
 
 <!--step 1 -->
       <v-stepper-content step="1">
+         <div>
+        <v-alert id="alert" type='error' :value="step1_alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
+      </div>
         <form>
         <div class="form-group">
 								<div class="input-group">
@@ -64,13 +65,20 @@
 
 <!--step 2 -->
       <v-stepper-content step="2">
-        <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-        <v-btn color="primary" @click.native="step(2)">Continue</v-btn>
+      <div>
+        <v-alert type='error' :value="step2_alert" icon="warning" transition="slide-y-transition">not match authentication code or server error. </v-alert>
+      </div>
+        <input type="authentication_code" autocomplete class="form-control"  v-model="authenticationCode" required placeholder="Enter your email authenticaton code" />
+        <v-btn color="warning" @click="emailValidation('sendToEmail')">send to authenticaiton code </v-btn> <br />
+        <v-btn color="primary" @click="emailValidation('confirmCode')">Continue</v-btn>
         <v-btn flat @click="modalCancel()">Cancel</v-btn>
       </v-stepper-content>
 
 <!--step 3 -->
       <v-stepper-content step="3">
+           <div>
+        <v-alert type='error' :value="step3_alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
+      </div>
         <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
         <v-btn color="primary" @click.native="step(3)">Continue</v-btn>
         <v-btn flat @click="modalCancel()">Cancel</v-btn>
@@ -85,7 +93,9 @@ import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
     return {
-      alert: false,
+      step1_alert: false,
+      step2_alert: false,
+      step3_alert: false,
       emailMessage: '',
       nameMessage: '',
       passwordMessage: '',
@@ -102,7 +112,10 @@ export default {
       sexOptions: [
         { text: 'Male', value: 'male' },
         { text: 'Female', value: 'female' }
-      ]
+      ],
+      // step 2
+      authenticationCode: '',
+      isEmailConfirm: false
     }
   },
   methods: {
@@ -144,13 +157,19 @@ export default {
             this.e1 = 2
           } else {
             // error message output
-            this.alert = true
+            this.step1_alert = true
+            document.getElementById('alert').innerHTML = 'efef'
             setTimeout(this.triggerAlert, 1000 * 3)
           }
           break
         case 2:
           // email confirm
-          this.e1 = 3
+          if (this.isEmailConfirm === true) {
+            this.e1 = 3
+          } else {
+            this.step2_alert = true
+            setTimeout(this.triggerAlert, 1000 * 3)
+          }
           break
         case 3:
           // sign up success -> modal dialog close
@@ -159,8 +178,37 @@ export default {
         default:
       }
     },
-    triggerAlert () {
-      this.alert = false
+    triggerAlert (step) {
+      if (step) {
+        this.step1_alert = false
+      }
+    },
+    // step 2
+    async emailValidation (state) {
+      if (state === 'sendToEmail') {
+        const response = await AuthenticationService.local_email_validation({
+          email: this.email
+        }, state)
+        if (response.data.success === true) {
+          // 보내기 성공 alert , timer 3분 시작
+        } else {
+          // 이메일 보내기 실패 오류 메세지
+        }
+      } else if (state === 'confirmCode') {
+        const response = await AuthenticationService.local_email_validation({
+          email: this.email,
+          authenticationCode: this.authenticationCode
+        }, state)
+        if (response.data.success === true) {
+          // 인증 성공 다음 step open
+          console.log('success authentication code')
+          this.isEmailConfirm = true
+          this.step(2)
+        } else {
+          console.log('error not to math')
+          // 일치하지 않거나 오류 메세지
+        }
+      }
     }
   },
   watch: {
