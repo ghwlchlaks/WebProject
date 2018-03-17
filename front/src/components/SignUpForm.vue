@@ -15,7 +15,7 @@
 <!--step 1 -->
       <v-stepper-content step="1">
          <div>
-        <v-alert id="alert" type='error' :value="step1_alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
+        <v-alert id="step1_alert" type='error' :value="step1_alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
       </div>
         <form>
         <div class="form-group">
@@ -66,10 +66,10 @@
 <!--step 2 -->
       <v-stepper-content step="2">
       <div>
-        <v-alert type='error' :value="step2_alert" icon="warning" transition="slide-y-transition">not match authentication code or server error. </v-alert>
+        <v-alert id="step2_alert" type='error' :value="step2_alert" icon="warning" transition="slide-y-transition">not match authentication code or server error. </v-alert>
       </div>
         <input type="authentication_code" autocomplete class="form-control"  v-model="authenticationCode" required placeholder="Enter your email authenticaton code" />
-        <v-btn color="warning" @click="emailValidation('sendToEmail')">send to authenticaiton code </v-btn> <br />
+        <v-btn color="warning" :disabled="emailBtnCondition" @click="emailValidation('sendToEmail')">send to authenticaiton code </v-btn> <br />
         <v-btn color="primary" @click="emailValidation('confirmCode')">Continue</v-btn>
         <v-btn flat @click="modalCancel()">Cancel</v-btn>
       </v-stepper-content>
@@ -93,6 +93,7 @@ import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
     return {
+      emailBtnCondition: false,
       step1_alert: false,
       step2_alert: false,
       step3_alert: false,
@@ -158,7 +159,6 @@ export default {
           } else {
             // error message output
             this.step1_alert = true
-            document.getElementById('alert').innerHTML = 'efef'
             setTimeout(this.triggerAlert, 1000 * 3)
           }
           break
@@ -178,10 +178,9 @@ export default {
         default:
       }
     },
-    triggerAlert (step) {
-      if (step) {
-        this.step1_alert = false
-      }
+    triggerAlert () {
+      this.step1_alert = false
+      this.step2_alert = false
     },
     // step 2
     async emailValidation (state) {
@@ -190,9 +189,18 @@ export default {
           email: this.email
         }, state)
         if (response.data.success === true) {
+          document.getElementById('step2_alert').classList.remove('error')
+          document.getElementById('step2_alert').classList.add('success')
+          document.getElementById('step2_alert').firstChild.innerHTML = 'info' // success icon load problem
+          document.getElementById('step2_alert').lastChild.innerHTML = 'success authentication code send to email'
+          this.emailBtnCondition = true // 이메일로 인증번호 보내기 버튼 비활성화
           // 보내기 성공 alert , timer 3분 시작
         } else {
           // 이메일 보내기 실패 오류 메세지
+          document.getElementById('step2_alert').classList.remove('success')
+          document.getElementById('step2_alert').classList.add('error')
+          document.getElementById('step2_alert').firstChild.innerHTML = 'warning'
+          document.getElementById('step2_alert').innerHTML = 'error not to send authentication code to email'
         }
       } else if (state === 'confirmCode') {
         const response = await AuthenticationService.local_email_validation({
@@ -203,12 +211,18 @@ export default {
           // 인증 성공 다음 step open
           console.log('success authentication code')
           this.isEmailConfirm = true
-          this.step(2)
         } else {
-          console.log('error not to math')
           // 일치하지 않거나 오류 메세지
+          document.getElementById('step2_alert').classList.remove('success')
+          document.getElementById('step2_alert').classList.add('error')
+          document.getElementById('step2_alert').firstChild.innerHTML = 'warning'
+          document.getElementById('step2_alert').lastChild.innerHTML = 'error not to match authentcation code'
         }
       }
+      this.step(2)
+    },
+    emailConditionBtn () {
+      return true
     }
   },
   watch: {
