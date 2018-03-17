@@ -16,7 +16,11 @@ var LocalUserSchema = new Schema({
     provider : {type:String}
 
 })
-
+// email authentication code model
+var tempUserSchema = new Schema({
+    email : {type : String , required: true, lowercase: true},
+    authenticationCode : {type: String, required: true}
+})
 //local account pre_save
 LocalUserSchema.pre('save', function (next) {
     var user = this
@@ -68,11 +72,13 @@ var FacebookUserSchema = new Schema({
     jwtToken : {type:String}
 })
 var LocalUser = mongoose.model('LocalUser', LocalUserSchema)
+var tempUser = mongoose.model('tempUser', tempUserSchema)
 var GoogleUser = mongoose.model('GoogleUser', GoogleUserSchema)
 var FacebookUser = mongoose.model('FacebookUser', FacebookUserSchema)
 
 module.exports = {
     LocalUser : LocalUser,
+    tempUser : tempUser,
     GoogleUser : GoogleUser,
     FacebookUser : FacebookUser
 }

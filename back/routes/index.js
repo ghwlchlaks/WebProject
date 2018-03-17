@@ -6,16 +6,20 @@ const passport = require('passport')
 //authentication
 const AuthenticationPolicy = require('../policies/AuthenticationPolicy')
 const AuthenticationJwtManager = require('../policies/AuthenticationJwtManager')
+const AuthenticationMailerServices = require('../policies/AuthenticationMailerService')
 const SocialAuthenticationManager = require('../policies/SocialAuthenticationManager')
 //board
 const NoticeBoarderController = require('../policies/NoticeBoarderController')
 
+
 //authentication router
 router.post('/local_signup', AuthenticationPolicy.signup, AuthenticationJwtManager.JwtTokenCreate)
+router.post('/local_signup/:state',AuthenticationMailerServices.services)
 router.post('/local_signin', AuthenticationJwtManager.JwtTokenGive, function (req, res) {
     res.json({ success: true, token: req.accessToken, user: req.accessUser })
 })
 router.post('/auth/:provider', SocialAuthenticationManager.checkedValidation)
+
 
 //noticeboard router
 router.get('/board/:boardId/:index', NoticeBoarderController.showNoticeBoard)
