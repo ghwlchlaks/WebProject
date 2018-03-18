@@ -71,7 +71,8 @@
         <input type="authentication_code" autocomplete class="form-control"  v-model="authenticationCode" required placeholder="Enter your email authenticaton code" />
         <v-btn color="warning" :disabled="emailBtnCondition" @click="emailValidation('sendToEmail')">send to authenticaiton code </v-btn> <br />
         <v-btn color="primary" @click="emailValidation('confirmCode')">Continue</v-btn>
-        <v-btn flat @click="modalCancel()">Cancel</v-btn>
+        <v-btn flat id="step2_cancel" @click="modalCancel()">Cancel</v-btn>
+        <label id='emailTimer'></label>
       </v-stepper-content>
 
 <!--step 3 -->
@@ -185,6 +186,7 @@ export default {
     // step 2
     async emailValidation (state) {
       if (state === 'sendToEmail') {
+        this.emailBtnCondition = true // 이메일로 인증번호 보내기 버튼 비활성화
         const response = await AuthenticationService.local_email_validation({
           email: this.email
         }, state)
@@ -193,7 +195,7 @@ export default {
           document.getElementById('step2_alert').classList.add('success')
           document.getElementById('step2_alert').firstChild.innerHTML = 'info' // success icon load problem
           document.getElementById('step2_alert').lastChild.innerHTML = 'success authentication code send to email'
-          this.emailBtnCondition = true // 이메일로 인증번호 보내기 버튼 비활성화
+          this.timerStart()
           // 보내기 성공 alert , timer 3분 시작
         } else {
           // 이메일 보내기 실패 오류 메세지
@@ -201,6 +203,7 @@ export default {
           document.getElementById('step2_alert').classList.add('error')
           document.getElementById('step2_alert').firstChild.innerHTML = 'warning'
           document.getElementById('step2_alert').innerHTML = 'error not to send authentication code to email'
+          this.emailBtnCondition = false // 이메일로 인증번호 보내기 실패시 버튼 다시 활성화
         }
       } else if (state === 'confirmCode') {
         const response = await AuthenticationService.local_email_validation({
@@ -221,8 +224,31 @@ export default {
       }
       this.step(2)
     },
-    emailConditionBtn () {
-      return true
+    timerStart () {
+      var time = 2
+      var timer = document.getElementById('emailTimer')
+      var timerId = window.setInterval(function () {
+        if (time >= 0) {
+          timer.innerHTML = setMinSec(time)
+          time--
+        } else {
+          clearInterval(timerId)
+          alert('expired time!')
+          window.location.reload()
+        }
+      }, 1000)
+      function setMinSec (time) {
+        var hour = Math.floor(time / 3600)
+        var min = Math.floor((time - (hour * 3600)) / 60)
+        var sec = time - (hour * 3600) - (min * 60)
+        if (min < 10) {
+          min = '0' + min
+        }
+        if (sec < 10) {
+          sec = '0' + sec
+        }
+        return (min + ':' + sec)
+      }
     }
   },
   watch: {
