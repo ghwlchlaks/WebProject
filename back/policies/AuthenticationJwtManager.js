@@ -43,7 +43,7 @@ module.exports = {
             return res.send({success: false, error: 'no token found'})
         }
     },
-    JwtTokenCreate(req, res, next) {
+    JwtTokenCreate(req, res) {
         if(!req.body.email || !req.body.password) {
             res.json({ success: false, error: 'Please pass email and password.' })
         } else {
@@ -66,6 +66,20 @@ module.exports = {
                 res.json({success: true, msg: 'successful created new user', token: 'JWT '+newUser.token})
             })
         }
+    },
+    UserChecked(req, res) {
+        let email = req.params.email
+        User.findOne({'email' : email}, function(err, user) {
+            if(err) {
+                res.send({success: false, message: 'mongodb usercheced error'})
+            }
+            if(!user) {
+                res.send({success: false, message: 'user not existed'})
+            }
+            else {
+                res.send({success: true, message: 'user existed'})
+            }
+        })
     }
     // JwtTokenCheck(req, res, next) {
     //     var token = getToken(req.headers)

@@ -4,6 +4,9 @@ export default {
   local_signup (credentials) {
     return Api().post('local_signup', credentials)
   },
+  userCheck (email) {
+    return Api().get(`/local_signup/${email}`)
+  },
   local_email_validation (credentials, state) {
     return Api().post(`/local_signup/${state}`, credentials)
   },

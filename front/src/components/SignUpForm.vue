@@ -58,7 +58,7 @@
               </b-form-radio-group>
             </b-form-group>
         <div class="signupBtn">
-        <v-btn large color="primary" @click.native="step(1)">Continue</v-btn> <!--e1 = 2-->
+        <v-btn large color="primary" @click.native="userCheck()">Continue</v-btn> <!--e1 = 2-->
         <v-btn large color="error" @click="modalCancel()">Cancel</v-btn>
         </div>
       </v-stepper-content>
@@ -117,6 +117,7 @@ export default {
       step1_alert: false,
       step2_alert: false,
       step3_alert: false,
+      isExistUser: false,
       emailMessage: '',
       nameMessage: '',
       passwordMessage: '',
@@ -163,6 +164,7 @@ export default {
     },
     modalCancel () {
       // step 1 clear
+      this.isExistUser = true
       this.emailMessage = ''
       this.passwordMessage = ''
       this.confirmPassMessage = ''
@@ -182,12 +184,25 @@ export default {
       this.isSignUp = false
       this.$store.dispatch('setSignUp', !this.$store.state.isSignUp)
     },
+    async userCheck () {
+      if (this.email !== '') {
+        const response = await AuthenticationService.userCheck(this.email)
+        if (response.data.success) {
+          document.getElementById('step1_alert').lastChild.innerHTML = 'error Exist User '
+          this.isExistUser = true
+        } else {
+          this.isExistUser = false
+          document.getElementById('step1_alert').lastChild.innerHTML = ' User Information Required Fulled'
+        }
+      }
+      this.step(1)
+    },
     step (stepNum) {
       switch (stepNum) {
         case 1:
           // user information total vaildation checked
           if (this.email !== '' && this.username !== '' && this.password !== '' && this.confirmPassword !== '' &&
-          this.emailMessage === '' && this.nameMessage === '' && this.passwordMessage === '' && this.confirmPassMessage === '') {
+          this.emailMessage === '' && this.nameMessage === '' && this.passwordMessage === '' && this.confirmPassMessage === '' && this.isExistUser === false) {
             this.e1 = 2
           } else {
             // error message output

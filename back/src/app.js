@@ -38,6 +38,7 @@ app.get('/', function(req,res){
 })
 // route login page
 app.post('/local_signup', index)
+app.get('/local_signup/:email',index)
 app.post('/local_signup/:state', index)
 app.post('/local_signin', index)
 app.post('/auth/:provider',index)
