@@ -68,33 +68,52 @@
       <div>
         <v-alert id="step2_alert" type='error' :value="step2_alert" icon="warning" transition="slide-y-transition">not match authentication code or server error. </v-alert>
       </div>
-        <input type="authentication_code" autocomplete class="form-control"  v-model="authenticationCode" required placeholder="Enter your email authenticaton code" />
-        <v-btn color="warning" :disabled="emailBtnCondition" @click="emailValidation('sendToEmail')">send to authenticaiton code </v-btn> <br />
-        <v-btn color="primary" @click="emailValidation('confirmCode')">Continue</v-btn>
-        <v-btn flat id="step2_cancel" @click="modalCancel()">Cancel</v-btn>
-        <label id='emailTimer'></label>
+       <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron text-center">
+        <h2>Enter the verification code</h2>
+          <div class="col-md-12 col-sm-12">
+            <div class="form-group form-group-lg">
+              <input type="text" :disable="isEmailConfirm" v-model="authenticationCode" placeholder="Enter verification code" class="form-control col-md-6 col-sm-6 col-sm-offset-2" name="verifyCode" required>
+              <label id='emailTimer'></label>
+              <v-btn color="warning" class="btn-primary col-md-6 col-sm-2" :disabled="emailBtnCondition" @click="emailValidation('sendToEmail')">Request </v-btn> <br />
+              <v-btn color="success" class="btn-primary col-md-6 col-sm-2" :disabled="isEmailConfirm" @click="emailValidation('confirmCode')">veritication</v-btn>
+              <v-btn color="primary" class="btn-primary col-md-6 col-sm-2" :disabled="!isEmailConfirm" @click="local_signup()">Continue</v-btn>
+              <v-btn color="error" id="step2_cancel" class="btn-primary col-md-6 col-sm-2" @click="modalCancel()">Cancel</v-btn>
+            </div>
+          </div>
+      </div>
+    </div>
+       </div>
       </v-stepper-content>
 
 <!--step 3 -->
       <v-stepper-content step="3">
-           <div>
-        <v-alert type='error' :value="step3_alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
-      </div>
-        <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-        <v-btn color="primary" @click.native="step(3)">Continue</v-btn>
-        <v-btn flat @click="modalCancel()">Cancel</v-btn>
+
+        <div>
+          <v-alert type='error' :value="step3_alert" icon="warning" transition="slide-y-transition">User Information Required Fulled. </v-alert>
+        </div>
+        <div class="jumbotron text-center">
+          <div class="row text-center">
+            <div class="col-sm-12 col-sm-offset-3">
+              <br> <h1 style="color:#0fad00">Success</h1>
+              <!-- <img src="http://osmhotels.com//assets/check-true.jpg"> -->
+              <p style="font-size:20px;color:#5C5C5C;">Thank you for register my page. <br />
+                After login you can enjoy my page </p>
+              <v-btn color="success" @click.native="step(3)">Log In</v-btn>
+            </div>
+          </div>
+        </div>
+
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
-
-
 </template>
 <script>
 import AuthenticationService from '../services/AuthenticationService'
 export default {
   data () {
     return {
-      emailBtnCondition: false,
       step1_alert: false,
       step2_alert: false,
       step3_alert: false,
@@ -107,9 +126,7 @@ export default {
       confirmPassword: '',
       username: '',
       res: null,
-      success: null,
-      msg: null,
-      e1: 0,
+      e1: 1, // current step
       sex: 'male',
       sexOptions: [
         { text: 'Male', value: 'male' },
@@ -117,7 +134,11 @@ export default {
       ],
       // step 2
       authenticationCode: '',
-      isEmailConfirm: false
+      timerId: null,
+      isEmailConfirm: false,
+      emailBtnCondition: false,
+      isSignUp: false
+      // step 3
     }
   },
   methods: {
@@ -128,16 +149,20 @@ export default {
         username: this.username,
         sex: this.sex
       })
-      this.success = response.data.success
-      this.msg = response.data.message
-      if (this.success) {
+      if (response.data.success) {
+        this.isSignUp = true
+        this.step(2)
         console.log('token! ', response.data.token)
       } else {
-        this.msg = response.data.error
-        console.log('signup fail! ', this.msg)
+        document.getElementById('step2_alert').classList.remove('success')
+        document.getElementById('step2_alert').classList.add('error')
+        document.getElementById('step2_alert').firstChild.innerHTML = 'warning'
+        document.getElementById('step2_alert').innerHTML = 'error not save server'
+        console.log('signup fail! ', response.data.message)
       }
     },
     modalCancel () {
+      // step 1 clear
       this.emailMessage = ''
       this.passwordMessage = ''
       this.confirmPassMessage = ''
@@ -148,6 +173,13 @@ export default {
       this.username = ''
       this.sex = 'male'
       this.e1 = 1
+      // step 2 clear
+      this.authenticationCode = ''
+      this.isEmailConfirm = false
+      clearInterval(this.timerId)
+      document.getElementById('emailTimer').innerHTML = ''
+      this.emailBtnCondition = false
+      this.isSignUp = false
       this.$store.dispatch('setSignUp', !this.$store.state.isSignUp)
     },
     step (stepNum) {
@@ -165,7 +197,7 @@ export default {
           break
         case 2:
           // email confirm
-          if (this.isEmailConfirm === true) {
+          if (this.isEmailConfirm === true && this.isSignUp === true) {
             this.e1 = 3
           } else {
             this.step2_alert = true
@@ -174,7 +206,7 @@ export default {
           break
         case 3:
           // sign up success -> modal dialog close
-          this.e1 = 1
+          this.modalCancel()
           break
         default:
       }
@@ -212,6 +244,12 @@ export default {
         }, state)
         if (response.data.success === true) {
           // 인증 성공 다음 step open
+          document.getElementById('step2_alert').classList.remove('error')
+          document.getElementById('step2_alert').classList.add('success')
+          document.getElementById('step2_alert').firstChild.innerHTML = 'info' // success icon load problem
+          document.getElementById('step2_alert').lastChild.innerHTML = 'success match to authenticaiton code'
+          clearInterval(this.timerId)
+          document.getElementById('emailTimer').innerHTML = ''
           console.log('success authentication code')
           this.isEmailConfirm = true
         } else {
@@ -225,14 +263,14 @@ export default {
       this.step(2)
     },
     timerStart () {
-      var time = 2
+      var time = 180
       var timer = document.getElementById('emailTimer')
-      var timerId = window.setInterval(function () {
+      this.timerId = window.setInterval(function () {
         if (time >= 0) {
           timer.innerHTML = setMinSec(time)
           time--
         } else {
-          clearInterval(timerId)
+          clearInterval(this.timerId)
           alert('expired time!')
           window.location.reload()
         }
@@ -368,4 +406,24 @@ input::-webkit-input-placeholder {
   margin-left: 23%;
 
 }
+/* step2 email vertification form design */
+#emailTimer {
+  padding-left: inherit;
+}
+.jumbotron.text-center {
+    height: 25em;
+}
+
+input.form-control.col-md-6 {
+    margin-right: 0em;
+    display: inline;
+}
+
+div#notes {
+    margin-top: 2%;
+    width: 98%;
+    margin-left: 1%;
+}
+
+/* step3 register success form design */
 </style>

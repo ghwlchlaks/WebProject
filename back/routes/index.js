@@ -13,7 +13,7 @@ const NoticeBoarderController = require('../policies/NoticeBoarderController')
 
 
 //authentication router
-router.post('/local_signup', AuthenticationPolicy.signup, AuthenticationJwtManager.JwtTokenCreate)
+router.post('/local_signup', AuthenticationJwtManager.JwtTokenCreate)
 router.post('/local_signup/:state',AuthenticationMailerServices.services)
 router.post('/local_signin', AuthenticationJwtManager.JwtTokenGive, function (req, res) {
     res.json({ success: true, token: req.accessToken, user: req.accessUser })
