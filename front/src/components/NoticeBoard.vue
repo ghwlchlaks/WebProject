@@ -1,8 +1,8 @@
 <template>
 <v-app class='content'>
   <v-content>
-  <v-alert type='success' :value='true'>{{board_name}}</v-alert>
-  <b-table class='cyan' striped hover :items="items" @row-clicked="rowClick"></b-table>
+  <!-- <v-alert type='success' :value='true'>{{board_name}}</v-alert> -->
+  <b-table id='dataTable' hover outlined :items="items" @row-clicked="rowClick"></b-table>
   <b-pagination-nav class='pagination' :number-of-pages=total_pages_number :link-gen="linkGen" v-model="currentPage"></b-pagination-nav><br /><br />
   <v-btn id='addBtn' dark @click="AddContents({name:'AddBoard', params: {stateBoard:'Add'}})">Add</v-btn>
   </v-content>
@@ -89,7 +89,8 @@ export default {
         changedData[i] = {
           // 'boardId'_id index access
           'INDEX': boardData.data[i][indexBoardId],
-          'TiTLE': boardData.data[i].title
+          'TiTLE': boardData.data[i].title,
+          'Writer': 'choi'
         }
       }
       this.items = changedData
@@ -105,5 +106,7 @@ export default {
 }
 .pagination {
   margin-left: 45%
+}
+#dataTable:hover {
 }
 </style>

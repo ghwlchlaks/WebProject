@@ -40,6 +40,14 @@
                 </v-list-tile-action>
               </v-list-tile>
             </v-list-group>
+            <v-list-tile @click="goToVoiceChat({name:'VoiceChattingBoard', params: {state:'view', index:1}})">
+                <v-list-tile-content>
+                  <v-list-tile-title>VoiceChatting Room</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>directions_run</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
         </v-list>
     </v-navigation-drawer>
     <!--signup dialog-->
@@ -127,6 +135,9 @@ export default {
       this.$router.push('/')
     },
     subItemClick (subTitle) {
+      this.$router.push(subTitle)
+    },
+    goToVoiceChat (subTitle) {
       this.$router.push(subTitle)
     },
     goHome () {

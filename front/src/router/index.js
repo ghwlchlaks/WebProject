@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import NoticeBoard from '@/components/NoticeBoard'
 import AddBoard from '@/components/AddBoard'
 import ViewContent from '@/components/ViewContent'
+import VoiceChattingBoard from '@/components/VoiceChattingBoard'
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ export default new Router({
       path: '/board/:boardId/:stateBoard/:index',
       name: 'ViewContent',
       component: ViewContent
+    },
+    {
+      path: '/voice/:state/:index',
+      name: 'VoiceChattingBoard',
+      component: VoiceChattingBoard
     }
   ]
 })
