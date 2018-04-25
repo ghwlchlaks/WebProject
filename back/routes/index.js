@@ -28,8 +28,9 @@ router.get('/board/:boardId/:index', NoticeBoarderController.showNoticeBoard)
 router.post('/board/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 router.get('/board/:boardId/:stateBoard/:index', NoticeBoarderController.showContent)
 
+router.get('/chatting/:boardId/:index', ChattingBoardController.showChattingRoom)
 router.post('/chatting/:boardId/:stateId',ChattingBoardController.addChattingRoom)
-
+router.get('/chatting/:boardId/:stateId/:index', ChattingBoardController.totalNum)
 
 //user page after Login
 router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, res) {

@@ -12,7 +12,7 @@ var voiceRoomSchema = new Schema({
 })
 
 //auto increment field name = 'boardname'_id
-voiceRoomSchema.plugin(AutoIncerement, { inc_field: 'voiceRoom_id' })
+voiceRoomSchema.plugin(AutoIncerement, { inc_field: 'voice_id' })
 
 var voiceRoom = mongoose.model('voiceRoom', voiceRoomSchema)
 

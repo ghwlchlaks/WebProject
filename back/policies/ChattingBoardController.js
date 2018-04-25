@@ -9,6 +9,7 @@ module.exports = {
         var query_string = {}
 
         collectionSelect(route_id, false)
+
         var query_id = route_id + '_id'
         var index = (parseInt(route_index) - 1) * 10
         query_string[query_id] = { "$gt": index, "$lt": index + 11 }
@@ -36,9 +37,9 @@ module.exports = {
             })
         }
     },
-    async showContent(req, res) {
+    async totalNum(req, res) {
         var route_id = req.params.boardId
-        var route_state = req.params.stateBoard
+        var route_state = req.params.stateId
         var route_index = req.params.index
         var query_string = {}
         var query_id = route_id + '_id'

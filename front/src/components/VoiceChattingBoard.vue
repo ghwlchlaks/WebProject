@@ -175,8 +175,8 @@ connection.onstreamended = function(event) {
         changedData[i] = {
           // 'boardId'_id index access
           'INDEX': voiceData.data[i][indexBoardId],
-          'TiTLE': voiceData.data[i].title,
-          'Writer': 'choi'
+          'Room Name': voiceData.data[i].roomName,
+          'ADMIN': 'choi'
         }
       }
       this.items = changedData
