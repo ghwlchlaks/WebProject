@@ -35,7 +35,7 @@ export default new Router({
       component: ViewContent
     },
     {
-      path: '/voice/:state/:index',
+      path: '/chatting/:boardId/:index',
       name: 'VoiceChattingBoard',
       component: VoiceChattingBoard
     }

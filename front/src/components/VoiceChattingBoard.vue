@@ -147,22 +147,21 @@ connection.onstreamended = function(event) {
         this.$router.push('/')
         return
       }
-      isCreateRoom = !isCreateRoom
+      this.isCreateRoom = !this.isCreateRoom
     },
     // event handler when table rowcliked
     rowClick (record, index) {
-      var routerData = {name: 'ViewContent', params: {boardId: this.board_name, stateBoard: 'View', index: record.INDEX}}
-      this.$router.push(routerData)
+      // var routerData = {name: 'ViewContent', params: {boardId: this.board_name, stateBoard: 'View', index: record.INDEX}}
+      // this.$router.push(routerData)
     },
     // table pagination button click event
     linkGen (pageNum) {
-      // console.log(pageNum)
       return '/' + this.baseurl + '/' + pageNum
     },
     // board initialize
     initialize (boardId) {
       this.board_name = boardId
-      this.baseurl = '#/board/' + boardId
+      this.baseurl = '#/chatting/' + boardId
       this.currentPage = 1
       this.linkGen(1)
     },

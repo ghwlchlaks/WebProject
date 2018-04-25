@@ -15,7 +15,7 @@ module.exports = {
         var route_index = req.params.index
         var query_string = {}
 
-        conllectionSelete(route_id, false)
+        collectionSelect(route_id, false)
         var query_id = route_id + '_id'
         var index = (parseInt(route_index) - 1) * 10
         query_string[query_id] = { "$gt": index, "$lt": index + 11 }
@@ -30,7 +30,7 @@ module.exports = {
         var route_id = req.params.boardId
         var route_state = req.params.stateBoard
 
-        conllectionSelete(route_id, true)
+        collectionSelect(route_id, true)
 
         if (route_state == 'Add') {
             board.title = req.body.title
@@ -50,7 +50,7 @@ module.exports = {
 
         query_string[query_id] = route_index
 
-        conllectionSelete(route_id, false)
+        collectionSelect(route_id, false)
 
         if (route_state == 'View') {
             await board.findOne(query_string, function (err, result) {
@@ -67,7 +67,7 @@ module.exports = {
     }
 }
 
-function conllectionSelete(route_id, isConstruct) {
+function collectionSelect(route_id, isConstruct) {
     if (!isConstruct) {
         switch (route_id) {
             case 'shotting':

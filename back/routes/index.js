@@ -10,7 +10,8 @@ const AuthenticationMailerServices = require('../policies/AuthenticationMailerSe
 const SocialAuthenticationManager = require('../policies/SocialAuthenticationManager')
 //board
 const NoticeBoarderController = require('../policies/NoticeBoarderController')
-
+//chatting
+const ChattingBoardController = require('../policies/ChattingBoardController')
 
 //authentication router
 router.post('/local_signup', AuthenticationJwtManager.JwtTokenCreate)
@@ -26,6 +27,9 @@ router.post('/auth/:provider', SocialAuthenticationManager.checkedValidation)
 router.get('/board/:boardId/:index', NoticeBoarderController.showNoticeBoard)
 router.post('/board/:boardId/:stateBoard', NoticeBoarderController.addNoticeBoard)
 router.get('/board/:boardId/:stateBoard/:index', NoticeBoarderController.showContent)
+
+router.post('/chatting/:boardId/:stateId',ChattingBoardController.addChattingRoom)
+
 
 //user page after Login
 router.get('/profile', AuthenticationJwtManager.JwtTokenCheck, function (req, res) {

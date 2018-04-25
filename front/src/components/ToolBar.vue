@@ -40,7 +40,7 @@
                 </v-list-tile-action>
               </v-list-tile>
             </v-list-group>
-            <v-list-tile @click="goToVoiceChat({name:'VoiceChattingBoard', params: {state:'view', index:1}})">
+            <v-list-tile @click="goToVoiceChat({name:'VoiceChattingBoard', params: {boardId:'voice', index:1}})">
                 <v-list-tile-content>
                   <v-list-tile-title>VoiceChatting Room</v-list-tile-title>
                 </v-list-tile-content>

@@ -49,6 +49,8 @@ app.get('/board/:boardId/:index', index)
 app.post('/board/:boardId/:stateBoard', index)
 app.get('/board/:boardId/:stateBoard/:index', index)
 
+app.post('/chatting/:boardId/:stateId',index)
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found')

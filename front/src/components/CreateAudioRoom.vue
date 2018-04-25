@@ -38,7 +38,7 @@
             </v-container>
 
             <div id="createBtn">
-					    <button class="btn-lg btn-success btn-block" @click="local_signIn()">Create</button>
+					    <button class="btn-lg btn-success btn-block" @click="CreateRoom()">Create</button>
             </div>
 				  </form>
 			  </div>
@@ -47,7 +47,8 @@
   </div>
 </template>
 <script>
-import AuthenticationService from '../services/AuthenticationService'
+import VoiceService from '@/services/VoiceService'
+/* eslint-disable */
 export default {
   data () {
     return {
@@ -73,49 +74,25 @@ export default {
     }
   },
   methods: {
-    async local_signIn () {
-      const response = await AuthenticationService.local_signin({
-        email: this.email,
-        password: this.password
+    async CreateRoom () {
+      console.log('send to data', this.e2)
+      const response = await VoiceService.add('voice','Add', {
+        roomname: this.roomname,
+        roompass: this.roompass,
+        peopleNum: this.e2
       })
-      this.$store.dispatch('setToken', response.data.token)
-      this.$store.dispatch('setUser', response.data.user.local)
       console.log(response)
       this.success = response.data.success
       if (this.success) {
-        this.msg = response.data.token
-        this.isSignin = false
+        this.msg = response.data
+        
       } else {
         this.$router.push('/')
         this.username = ''
         this.password = ''
         this.msg = response.data.msg
       }
-    },
-    async socialLogin (provider) {
-      this.res = null
-      var this_ = this
-      var data = null
-      // request token 1 -> authentication code 서버로 전달 2
-      await this_.$auth.authenticate(provider).then(function (authResponse) {
-        if (provider === 'google') {
-          console.log('google api called block')
-        } else if (provider === 'facebook') {
-          console.log('facebook api called block')
-        }
-        if (authResponse.data.success === true) {
-          data = authResponse.data.user
-        }
-      })
-      if (data !== null) {
-        this.$store.dispatch('setUser', data)
-        this.$store.dispatch('setToken', data.jwtToken)
-      } else {
-        this.$store.dispatch('setUser', null)
-        this.$store.dispatch('setToken', null)
-        this.$router.push('/')
-      }
-      window.location.reload()
+      console.log('createroom response data: ', this.msg)
     }
   }
 }
