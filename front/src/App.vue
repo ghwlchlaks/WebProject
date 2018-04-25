@@ -27,4 +27,5 @@ export default {
 #dataTable > thead > tr:hover {
   background-color: sienna;
 }
+
 </style>
