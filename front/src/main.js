@@ -23,7 +23,7 @@ Vue.use(VueAuthenticate, {
       redirectUri: 'http://localhost:8080/auth/callback'
     },
     facebook: {
-      clientId: '337828346723905',
+      clientId: '147138082759931',
       redirectUri: 'http://localhost:8080/auth/callback'
     }
   }

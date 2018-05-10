@@ -74,7 +74,7 @@ export default {
     // board initialize
     initialize (boardId) {
       this.board_name = boardId
-      this.baseurl = '#/voice/' + boardId
+      this.baseurl = '#/board/' + boardId
       this.currentPage = 1
       this.linkGen(1)
     },

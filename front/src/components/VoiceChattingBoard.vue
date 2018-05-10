@@ -11,13 +11,6 @@
       </v-card>
     </v-dialog>
 
-
-    <input type="text" id="txt-roomid" placeholder="unique room id">
-    <!-- <button id="btn-open-or-join-room">open or join room</button>
-    <div id="local-video-container"></div>
-    <div id="remote-video-container"></div> -->
-    <hr>
-
       <v-layout row justify-center>
     <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" :overlay="false">
       <v-btn id='btn-open-or-join-room' color="primary" dark slot="activator">Open Dialog</v-btn>
@@ -58,15 +51,11 @@ export default {
       sound: true,
       widgets: false,
       isCreateRoom: false,
-      items: [{
-        'INDEX': 'as',
-        'TiTLE': 'er',
-        'Writer': 'choi'
-      }],
       board_name: null,
       currentPage: 1,
       baseurl: null,
       items: [{}],
+      roomid: [{}],
       total_pages_number: 0,
       boardId: 'voice'
     }
@@ -75,9 +64,25 @@ export default {
     this.getData(this.boardId, 1)
     this.initialize(this.boardId)
     this.total_page(this.boardId)
-
-    var roomid = document.getElementById('txt-roomid')
-    roomid.value = (Math.random() * 1000).toString().replace('.', '')
+  },
+  methods: {
+    // get total page number
+    async total_page (boardId) {
+      const response = await VoiceService.totalPages(boardId)
+      if (response.data.success === true) {
+        this.total_pages_number = Math.ceil(response.data.message / 10)
+      }
+    },
+    AddContents () {
+      if (!this.$store.state.isUserLoggedin) {
+        alert('로그인후 이용가능합니다.')
+        this.$router.push('/')
+        return
+      }
+      this.isCreateRoom = !this.isCreateRoom
+    },
+    // event handler when table rowcliked
+    rowClick (record, index) {
     var connection = new RTCMultiConnection()
     connection.socketURL = 'http://localhost:443/'
     connection.session = {
@@ -113,46 +118,24 @@ export default {
         remoteVideoContainer.appendChild(userId)
         remoteVideoContainer.appendChild(video)
       }
-      var mediaElement = getHTMLMediaElement(video, {
-        title: userEmail
-      })
-      connection.audiosContainer.appendChild(mediaElement)
-      mediaElement.id = event.streamid
     }
-connection.onstreamended = function(event) {
+  connection.onstreamended = function(event) {
     var mediaElement = document.getElementById(event.streamid);
     var userIdElement = document.getElementById(event.streamid + '-id');
     if (mediaElement) {
         mediaElement.parentNode.removeChild(mediaElement);
         userIdElement.parentNode.removeChild(userIdElement);
-    }
-};
-
-    document.getElementById('btn-open-or-join-room').onclick = function () {
+      }
+    };
+      console.log(this.roomid[index].roomid)
+      var roomid_int =parseInt(this.roomid[index].roomid)
+      this.dialog = !this.dialog
+      document.getElementById('btn-open-or-join-room').onclick = function () {
       this.disabled = true
-      connection.openOrJoin(roomid.value || 'predefiend-roomid')
+      
+      connection.openOrJoin(roomid_int|| 'predefiend-roomid')
     }
-  },
-  methods: {
-    // get total page number
-    async total_page (boardId) {
-      const response = await VoiceService.totalPages(boardId)
-      if (response.data.success === true) {
-        this.total_pages_number = Math.ceil(response.data.message / 10)
-      }
-    },
-    AddContents () {
-      if (!this.$store.state.isUserLoggedin) {
-        alert('로그인후 이용가능합니다.')
-        this.$router.push('/')
-        return
-      }
-      this.isCreateRoom = !this.isCreateRoom
-    },
-    // event handler when table rowcliked
-    rowClick (record, index) {
-      // var routerData = {name: 'ViewContent', params: {boardId: this.board_name, stateBoard: 'View', index: record.INDEX}}
-      // this.$router.push(routerData)
+    document.getElementById('btn-open-or-join-room').click()
     },
     // table pagination button click event
     linkGen (pageNum) {
@@ -169,6 +152,7 @@ connection.onstreamended = function(event) {
       const voiceData = await VoiceService.show(boardId, index)
       var indexBoardId = boardId + '_id'
       var changedData = [{}]
+      var changedRoomid = [{}]
       for (var i = 0; i < voiceData.data.length; i++) {
         // var jsonString = JSON.stringify(boardData.data[i])  to string from json
         // var json = JSON.parse(jsonString)  to json from string
@@ -178,8 +162,12 @@ connection.onstreamended = function(event) {
           'Room Name': voiceData.data[i].roomName,
           'ADMIN': 'choi'
         }
+        changedRoomid[i] = {
+          'roomid': voiceData.data[i].roomid
+        }
       }
       this.items = changedData
+      this.roomid = changedRoomid
     }
   },
   components: {CreateAudioRoom}

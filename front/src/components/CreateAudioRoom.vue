@@ -58,8 +58,8 @@ export default {
       msg: null,
       e2: null,
       items: [
-        {text: '1'},
-        {text: '2'}
+        {text: '2'},
+        {text: '3'}
       ],
       enabledRoomPass: false
     }
@@ -75,11 +75,13 @@ export default {
   },
   methods: {
     async CreateRoom () {
-      console.log('send to data', this.e2)
+      var roomid = (Math.random() * 1000).toString().replace('.', '')
+      console.log('roomid', roomid)
       const response = await VoiceService.add('voice','Add', {
         roomname: this.roomname,
         roompass: this.roompass,
-        peopleNum: this.e2
+        peopleNum: this.e2,
+        roomid: roomid
       })
       console.log(response)
       this.success = response.data.success

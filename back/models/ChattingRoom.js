@@ -8,7 +8,8 @@ var voiceRoomSchema = new Schema({
     roomPass: { type: String },
     peopleNum: { type:  String, require: true },
     Admin: { type: String, require: true },
-    createTime: { type: Date, require: true }
+    createTime: { type: Date, require: true },
+    roomid : {type: String, required: true}
 })
 
 //auto increment field name = 'boardname'_id
