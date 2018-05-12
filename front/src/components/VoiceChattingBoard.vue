@@ -22,7 +22,7 @@
           <v-toolbar-title>Settings</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn dark flat @click.native="dialog = false">Save</v-btn>
+            <v-btn id='room_exit' dark flat>Save</v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <div id='audios-container'>
@@ -57,7 +57,7 @@ export default {
       items: [{}],
       roomid: [{}],
       total_pages_number: 0,
-      boardId: 'voice'
+      boardId: 'voice',
     }
   },
   mounted () {
@@ -101,6 +101,7 @@ export default {
     connection.audiosContainer = document.getElementById('audios-container')
     var localVideoContainer = document.getElementById('local-video-container')
     var remoteVideoContainer = document.getElementById('remote-video-container')
+    var room_exit = document.getElementById('room_exit')
     var userEmail = this.$store.state.user.email
 
     connection.onstream = function (event) {
@@ -119,7 +120,11 @@ export default {
         remoteVideoContainer.appendChild(video)
       }
     }
-  connection.onstreamended = function(event) {
+    room_exit.onclick =function() {
+      connection.disconnect()
+      window.location.reload()
+    }
+    connection.onstreamended = function(event) {
     var mediaElement = document.getElementById(event.streamid);
     var userIdElement = document.getElementById(event.streamid + '-id');
     if (mediaElement) {
