@@ -38,7 +38,7 @@
             </v-container>
 
             <div id="createBtn">
-					    <button class="btn-lg btn-success btn-block" @click="CreateRoom()">Create</button>
+					    <button class="btn-lg btn-success btn-block" v-on:click.prevent="CreateRoom()">Create</button>
             </div>
 				  </form>
 			  </div>
